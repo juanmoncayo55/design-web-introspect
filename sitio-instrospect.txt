@@ -1,0 +1,11 @@
+Plantilla html, css.
+Tipografia:
+	Logo: Pacifico
+	textos: Lato, sans-serif
+Colores:
+	primario: #e5474b
+	blanco: #FFFFFF
+	negro: #111111
+	grisOscuro: #f3f3f3
+	grisClaro: #f7f7f7
+	grisIcon: #b3b3b3
