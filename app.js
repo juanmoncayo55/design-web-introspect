@@ -52,6 +52,8 @@ app.get('/signup', (req, res, next) => {
 	(req.session.user)
 		? res.redirect('/home/dashboard')
 		: res.render('signup', {title: "Formulario de Registro", message: null})
+
+	console.log("/signup session: ", req.session);
 });
 app.post('/signup', (req, res, next) => {
 	console.log("Signup POST: ", req.body);
@@ -79,7 +81,6 @@ app.post('/signup', (req, res, next) => {
 
 // Login
 app.get('/login', (req, res, next) => {
-	console.log(req.session);
 	(req.session.user)
 		? res.redirect('/home/dashboard')
 		: res.render('login', {title: "Inicio de sesión"});
@@ -97,7 +98,7 @@ app.post('/login', (req, res, next) => {
 					console.log("Login user: ", data[0]);
 					req.session.userId = data[0].id;
 					req.session.user = data;
-					res.render('dashboard');
+					res.redirect('/home/dashboard');
 				}else{
 					console.log("Login Incorrect ", data)
 					res.render('login', {message: "Credenciales incorrectas"});

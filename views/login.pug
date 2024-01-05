@@ -3,7 +3,7 @@ extends layout.pug
 block content
     section.contenedor.login-contenedor
         div.login-content
-            a.no-margin.logo__title(href='index.html') introspect
+            a.no-margin.logo__title(href='/') introspect
             form.formulario.login-formulario(method="POST", action="/login", id="login-form")
                 if(message)
                     span.formulario__signug-link= message

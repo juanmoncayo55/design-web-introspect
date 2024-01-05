@@ -330,6 +330,9 @@ img{max-width: 100%;}
 	padding: 1.2rem;
 	font-size: 1.8rem;
 }
+.login-formulario .campo__input {
+    background-color: #FFF;
+}
 .signup-formulario .campo, .login-formulario .campo{ margin-bottom: 1.8rem; }
 
 .signup-formulario .campo__input:focus, .login-formulario .campo__input:focus{
@@ -379,11 +382,14 @@ img{max-width: 100%;}
 
 }
 .login-content{
-	max-width: 40rem;
+	max-width: 42rem;
     margin: 0 auto;
     width: 100%;
     text-align: center;
     margin-top: 4rem;
+    padding: 2rem;
+    background-color: var(--grisOscuro);
+    border-radius: 5rem 0;
 }
 
 .login-content .logo__title{
