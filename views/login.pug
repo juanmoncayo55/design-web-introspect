@@ -1,0 +1,19 @@
+extends layout.pug
+
+block content
+    section.contenedor.login-contenedor
+        div.login-content
+            a.no-margin.logo__title(href='index.html') introspect
+            form.formulario.login-formulario(method="POST", action="/login", id="login-form")
+                if(message)
+                    span.formulario__signug-link= message
+                .campo
+                    label.campo__label Escribe tu Nickname
+                    input.campo__input(type='text', name="nickname_txt", placeholder="Nickname", id="nickname", autocomplete='off', required)
+                .campo
+                    label.campo__label Escribe tu Contraseña
+                    input.campo__input(type='password', name="password_psw", placeholder="Contraseña", id="password", autocomplete='off', required)
+                input.boton.formulario__send(type='submit' value='Iniciar sesión')
+                span.formulario__signug-link
+                    | Don't Have An account 
+                    a(href="/signup") Sign Up

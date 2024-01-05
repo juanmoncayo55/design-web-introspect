@@ -1,0 +1,25 @@
+doctype html
+html(lang="es")
+	head
+		meta(charset='UTF-8')
+		meta(name='viewport' content='width=device-width, initial-scale=1.0')
+		title= title
+		link(rel='preload' href='css/normalize.css' as='style')
+		link(rel='stylesheet' href='css/normalize.css')
+		link(rel='preload' href='https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap' crossorigin='crossorigin' as='font')
+		link(href='https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap' rel='stylesheet')
+		link(rel='preload' href='https://use.fontawesome.com/releases/v5.12.1/css/all.css' crossorigin='anonymous' as='font')
+		link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.12.1/css/all.css' crossorigin='anonymous')
+		link(rel='preload' href='css/styles.css' as='style')
+		link(rel='stylesheet' href='css/styles.css')
+	body
+		header.header
+			.contenedor.header-contenedor
+				.logo
+					a.no-margin.logo__title(href='index.html')
+						| introspect
+				nav.navigation
+					a.navigation__link(href='#') Home
+					a.navigation__link(href='#') Generic
+					a.navigation__link(href='#') Elements
+		block content
