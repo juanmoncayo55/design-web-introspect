@@ -34,11 +34,12 @@ app.use(publicDir);
 app.use(favicon);
 
 app.use(conn);
+// En la cookie le damos el maximo de tiempo de 30 minutos(30 * 60 * 1000)
 app.use(session({
 	secret: 'user admin',
 	resave: false,
 	saveUninitialized: true,
-	cookie: {maxAge: 60000}
+	cookie: {maxAge: 30 * 60 * 1000}
 }));
 
 // Index(Home)
@@ -120,7 +121,7 @@ app.get('/home/dashboard', (req, res, next) => {
 		console.log("Sesion en Login: ", req.session)
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM users WHERE id = ?", user[0].id, (err, data) => {
-				res.render('dashboard', {title: "Dashboard"});
+				res.render('dashboard', {title: "Dashboard", data: data[0]});
 				console.log("Dashboard Correcto: ", data);
 			});
 		});

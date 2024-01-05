@@ -12,8 +12,8 @@ html(lang="es")
 		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' crossorigin='anonymous')
 		link(rel='preload' href='../css/styles.css' as='style')
 		link(rel='stylesheet' href='../css/styles.css')
-	body
-		header.header
+	body.body-dashboard
+		//- header.header
 			.contenedor.header-contenedor
 				.logo
 					a.no-margin.logo__title(href='/') introspect
@@ -23,4 +23,69 @@ html(lang="es")
 					a.navigation__link(href='#') Elements
 					a.navigation__link(href='/home/logout')
 						i.fa-solid.fa-arrow-right-from-bracket
-		h1= title
+		section.dashboard-contenedor
+			div.dashboard-panel-left
+				.logo
+					a.no-margin.logo__title(href='/') introspect
+				ul.dashboard-navigation
+					a.dashboard-navigation-link(href="#")
+						i.fa-solid.fa-house-chimney
+						| Home
+					a.dashboard-navigation-link(href="#")
+						i.fa-solid.fa-bars-progress
+						| Workflow
+					a.dashboard-navigation-link(href="#")
+						i.fa-solid.fa-chart-simple
+						| Stadistics
+					a.dashboard-navigation-link(href="#")
+						i.fa-solid.fa-user
+						| User
+					a.dashboard-navigation-link(href="#")
+						i.fa-solid.fa-calendar-days
+						| Calendar
+			div.dashboard-panel-contenedor
+				div.dashboard-panel__header
+					form.dashboard-panel__form(action="/", method="GET")
+						input.dashboard-panel__form-input(type="text", name="search-dashboard_txt", id="search-dashboard", placeholder="Search", required)
+					div.dashboard-panel__header-options
+						a.dashboard-panel__header-btn(href="#")
+							i.fa-solid.fa-plus
+							| Agregar Proyecto
+						div.dashboard-panel__header-message
+							a.icon(href="#")
+								i.fa-solid.fa-envelope
+							div.dashboard-panel__header-message_panel(style="display:none;")
+								ol
+									li Hueso Carnudo
+									li Hueso de Pollo
+									li Papa guata
+									li Papa yema de huevo
+									li Sandias
+						div.dashboard-panel__header-notification
+							a.icon(href="#")
+								i.fa-solid.fa-bell
+							div.dashboard-panel__header-notification_panel(style="display:none;")
+								ol
+									li Hueso Carnudo
+									li Hueso de Pollo
+									li Papa guata
+									li Papa yema de huevo
+									li Sandias
+						div.dashboard-panel__header-user
+							a(href="#", id="user-r").dashboard-panel__header-user-link
+								img.imagen-avatar(src="/images/avatar.png")
+								b.caret
+							div.dashboard-panel__header-user-menu
+								b.name #{data.first_name} #{data.last_name}
+								p.username #{data.user_name}
+								a(href="#sfsdfsd").dashboard-panel__header-btn.username-btn Ver Perfil
+		script.
+			(function(c, d){
+				const userR = d.querySelector("#user-r"),
+					panelUserMenu = d.querySelector(".dashboard-panel__header-user-menu");
+
+				userR.addEventListener("click", function(e){
+					e.preventDefault();
+					panelUserMenu.classList.toggle("showPanMenu")
+				});
+			})(console.log, document);
