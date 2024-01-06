@@ -129,6 +129,21 @@ app.get('/home/dashboard', (req, res, next) => {
 });
 // End - Dashboard
 
+// Profile
+app.get('/home/profile', (req, res, next) => {
+	if(req.session.user){
+		req.getConnection((err, conn) => {
+			conn.query("SELECT * FROM users WHERE id = ?", req.session.userId, (err, data) => {
+				console.log(data)
+				res.render('profile', {title: "Información del usuario", data: data[0]})
+			});
+		});
+	}else{
+		res.redirect('/login');
+	}
+});
+// End - Profile
+
 // Logout
 app.get('/home/logout', (req, res, next) => {
 	req.session.destroy(function(err) {
@@ -140,11 +155,6 @@ app.get('/home/logout', (req, res, next) => {
 });
 // End - Logout
 
-// Profile
-app.get('/home/profile', (req, res, next) => {
-
-});
-// End - Profile
 
 
 

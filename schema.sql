@@ -1,0 +1,51 @@
+DROP DATABASE IF EXISTS countrys;
+CREATE DATABASE IF NOT EXISTS countrys;
+USE countrys;
+
+CREATE TABLE countrys(
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL
+)ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+INSERT INTO countrys VALUES ("Antigua y Barbuda"),
+("Aruba"),
+("Bahamas"),
+("Barbados"),
+("Cuba"),
+("Dominica"),
+("Grenada"),
+("Guadalupe"),
+("Haití"),
+("Islas Caimán"),
+("Islas Turcas y Caicos"),
+("Islas Vírgenes"),
+("Jamaica"),
+("Martinica"),
+("Puerto Rico"),
+("República Dominicana"),
+("San Bartolomé"),
+("San Cristóbal y Nieves"),
+("San Vicente y las Granadinas"),
+("Santa Lucía"),
+("Trinidad y Tobago"),
+("Belice"),
+("Costa Rica"),
+("El Salvador"),
+("Guatemala"),
+("Honduras"),
+("Nicaragua"),
+("Panamá"),
+("Argentina"),
+("Bolivia"),
+("Brasil"),
+("Chile"),
+("Colombia"),
+("Ecuador"),
+("Guyana"),
+("Guyana Francesa"),
+("Paraguay"),
+("Perú"),
+("Suriname"),
+("Uruguay"),
+("Venezuela"),
+("México");
