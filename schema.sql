@@ -7,45 +7,13 @@ CREATE TABLE countrys(
     name VARCHAR(80) NOT NULL
 )ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
-INSERT INTO countrys VALUES ("Antigua y Barbuda"),
-("Aruba"),
-("Bahamas"),
-("Barbados"),
-("Cuba"),
-("Dominica"),
-("Grenada"),
-("Guadalupe"),
-("Haití"),
-("Islas Caimán"),
-("Islas Turcas y Caicos"),
-("Islas Vírgenes"),
-("Jamaica"),
-("Martinica"),
-("Puerto Rico"),
-("República Dominicana"),
-("San Bartolomé"),
-("San Cristóbal y Nieves"),
-("San Vicente y las Granadinas"),
-("Santa Lucía"),
-("Trinidad y Tobago"),
-("Belice"),
-("Costa Rica"),
-("El Salvador"),
-("Guatemala"),
-("Honduras"),
-("Nicaragua"),
-("Panamá"),
-("Argentina"),
-("Bolivia"),
-("Brasil"),
-("Chile"),
-("Colombia"),
-("Ecuador"),
-("Guyana"),
-("Guyana Francesa"),
-("Paraguay"),
-("Perú"),
-("Suriname"),
-("Uruguay"),
-("Venezuela"),
-("México");
+
+
+
+
+ALTER TABLE users
+ADD CONSTRAINT FK_usersConuntry
+FOREIGN KEY (country) REFERENCES countrys(id);
+
+
+SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.country = countrys.id;
