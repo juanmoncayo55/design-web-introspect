@@ -275,9 +275,15 @@ app.get('/home/logout', (req, res, next) => {
 });
 // End - Logout
 
+// Page Not Found (404)
+app.use((req, res, next) => {
+	let err = new Error();
+	err.status = 404;
+	err.message = "Página No Encontrada";
 
+	console.log(err);
 
-
-
+	res.render('error', { error: err })
+});
 
 app.listen(app.get('port'), () => console.log(`Estamos escuchando por la URL: http://localhost:${app.get('port')}`));
