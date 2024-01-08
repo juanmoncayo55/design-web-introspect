@@ -432,7 +432,6 @@ img{max-width: 100%;}
 .dashboard-panel-left .logo{text-align: center;}
 .dashboard-panel-contenedor{
 	background-color: #f6f7fa;
-	/*padding: 2rem 3rem;*/
 }
 .dashboard-navigation{
 	margin-top: 3rem;
@@ -551,6 +550,10 @@ img{max-width: 100%;}
 	margin: 1.5rem auto;
 	width: 95%;
 }
+.dashboard-users__show{
+	width: 100%;
+    padding: 1.8rem;
+}
 /* Dashboard Profile User */
 .dashboard-profile__user{
 }
@@ -593,10 +596,48 @@ img{max-width: 100%;}
 }
 .dashboard-profile__user-content-working{font-size: 1.7rem;margin-top: 0.5rem;}
 .dashboard-profile__user-content-image{
-	border-radius: 50%;
+	margin: 0 auto;
 	width: 20rem;
 	height: 20rem;
+	position: relative;
 }
+.dashboard-profile__user-content-image img{
+	border-radius: 50%;
+	width: 100%;
+}
+.link-change-photo-profile{
+	position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background-color: #e5474b7a;
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.link-change-photo-profile i{ font-size: 2.5rem; }
+.link-change-photo-profile p{
+	line-height: normal;
+    font-size: 1.3rem;
+    margin-top: 0.8rem;
+    text-transform: uppercase;
+    text-wrap: wrap;
+}
+.dashboard-profile__user-content-image:hover > .link-change-photo-profile{
+	display: flex;
+}
+.dashboard-profile__user-content-close-link{
+	display: block;
+    margin-top: 2.5rem;
+    color: var(--primario);
+    font-size: 1.7rem;
+}
+.dashboard-profile__user-content-close-link:hover{text-decoration: underline;}
+.dashboard-profile__user-content-close-link i{margin-right: 1rem;}
 .dashboard-profile__user-content-block2{
 	flex: 1 0 65%;
 }
@@ -668,3 +709,36 @@ img{max-width: 100%;}
 .formulario-dashboard-userProfile .campo__btn:hover{opacity: .8;}
 .formulario-dashboard-userProfile .campo__btn:active{transform: scale(1.1);}
 .formulario-dashboard-userProfile .div-btn-profile{text-align: center; margin-top: 4rem;}
+.formulario-dashboard-userProfile-disabled{
+	pointer-events: none;
+    background-color: #9E9E9E !important;
+}
+.table{
+	width: 100%;
+	border-spacing:0;
+}
+.table thead{
+    font-size: 1.6rem;
+    color: var(--primario);
+}
+.table thead th {
+    text-align: left;
+	border-bottom: solid 3px var(--primario);
+	padding: 1.3rem 0;
+}
+.table tbody{
+    font-size: 1.7rem;
+    color: #474747;
+}
+.table tbody tr td{
+	border-bottom: solid 1px var(--primario);
+}
+.table tbody tr td{padding: 1.3rem 0;}
+.table-action{
+	padding: 0.7rem;
+    background-color: #122143;
+    color: white;
+    border-radius: 0.8rem;
+    font-size: 1.6rem;
+}
+.table-action.delete{ background-color: #bc282c;}

@@ -4,14 +4,14 @@ html(lang="es")
 		meta(charset='UTF-8')
 		meta(name='viewport' content='width=device-width, initial-scale=1.0')
 		title= title
-		link(rel='preload' href='../css/normalize.css' as='style')
-		link(rel='stylesheet' href='../css/normalize.css')
+		link(rel='preload' href='/../css/normalize.css' as='style')
+		link(rel='stylesheet' href='/../css/normalize.css')
 		link(rel='preload' href='https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap' crossorigin='crossorigin' as='font')
 		link(href='https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap' rel='stylesheet')
 		link(rel='preload' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' crossorigin='anonymous' as='style')
 		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' crossorigin='anonymous')
-		link(rel='preload' href='../css/styles.css' as='style')
-		link(rel='stylesheet' href='../css/styles.css')
+		link(rel='preload' href='/../css/styles.css' as='style')
+		link(rel='stylesheet' href='/../css/styles.css')
 	body.body-dashboard
 		section.dashboard-contenedor
 			div.dashboard-panel-left
@@ -27,7 +27,7 @@ html(lang="es")
 					a.dashboard-navigation-link(href="#")
 						i.fa-solid.fa-chart-simple
 						| Stadistics
-					a.dashboard-navigation-link(href="#")
+					a.dashboard-navigation-link(href="/home/users")
 						i.fa-solid.fa-user
 						| Users
 					a.dashboard-navigation-link(href="#")
@@ -66,11 +66,12 @@ html(lang="es")
 								img.imagen-avatar(src="/images/avatar.png")
 								b.caret
 							div.dashboard-panel__header-user-menu
-								b.name #{data.first_name} #{data.last_name}
-								p.username #{data.user_name}
+								b.name #{userLogued.first_name} #{userLogued.last_name}
+								p.username #{userLogued.user_name}
 								a(href="/home/profile").dashboard-panel__header-btn.username-btn Ver Perfil
 				div.dashboard-panel-content
 					block content
+		script(src="/js/codigo.js")
 		script.
 			(function(c, d){
 				const userR = d.querySelector("#user-r"),

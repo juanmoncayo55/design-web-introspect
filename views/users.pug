@@ -1,0 +1,33 @@
+extends dashboard.pug
+
+block content
+    section.dashboard-users__show
+        table.table
+            thead
+                tr
+                    th Primer Nombre
+                    th Primer Apellido
+                    th Celular
+                    th Username
+                    th Correo
+                    th Pais
+                    th Cargo
+                    th
+                    th
+            tbody
+                each user in users
+                    tr
+                        td #{user.first_name}
+                        td #{user.last_name}
+                        td #{user.mob_no}
+                        td #{user.user_name}
+                        td #{user.email}
+                        td #{user.country}
+                        td #{user.area_working}
+                        td.centrar-text
+                            a.table-action(href=`/home/edit-user/${user.id}`, title="Editar")
+                                i.fa-regular.fa-pen-to-square
+                        td.centrar-text
+                            a.table-action.delete(href="#", title="Eliminar")
+                                i.fa-regular.fa-trash-can
+        // each user in users

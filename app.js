@@ -10,6 +10,7 @@ const express = require('express'),
 	port = (process.env.PORT || 3000),
 	mysql = require('mysql'),
 	myConnection = require('express-myconnection'),
+	fileUpload = require('express-fileupload'),
 	dbOptions = {
 		host: "localhost",
 		user: "root",
@@ -18,18 +19,21 @@ const express = require('express'),
 		database: "introspect"
 	},
 	conn = myConnection(mysql, dbOptions, 'request'),
-	path = require('path');
-	//cors = require('cors');
+	path = require('path'),
+	cors = require('cors');
 
 let app = express();
+
+//app.use(fileUpload);
 
 app.set('views', viewDir);
 app.set('view engine', 'pug');
 app.set('port', port);
 
-//app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cors());
+app.use(fileUpload());
 app.use(publicDir);
 app.use(favicon);
 
@@ -80,6 +84,41 @@ app.post('/signup', (req, res, next) => {
 });
 // End - Signup
 
+// Upload Image
+app.post('/upload-image', (req, res, next) => {
+	let photoPerfil;
+	let uploadPath;
+	if(!req.files || Object.keys(req.files).length == 0){
+		return res.status(400).json({message: "Ningun archivo fue cargado."});
+	}
+	photoPerfil = req.files.photo_perfil;
+	uploadPath = __dirname + '/public/images/dashboard/' + photoPerfil.name;
+
+	photoPerfil.mv(uploadPath, (err) => {
+		if (err)
+		      return res.status(500).send(err);
+		else{
+			//console.log("Url del archivo: ", uploadPath);
+			//console.log("photoPerfil: ", photoPerfil.name);
+			let id_profile = req.body.id_user,
+				name_photo = photoPerfil.name;
+
+			req.getConnection((err, conn) =>{
+				// users SET first_name = ? WHERE id = ${idUser}
+				conn.query("UPDATE users SET imagen_avatar = ? WHERE id = ?", [name_photo, id_profile], (err, data) => {
+					if(err)
+						res.status(502).json({error: "Error en la Base de Datos"});
+					else{
+						res.status(200).json({success: "Archivo subido con exito :D"});
+					}
+				});
+			});
+
+		}
+	});
+});
+// End - Upload Image
+
 // Login
 app.get('/login', (req, res, next) => {
 	(req.session.user)
@@ -121,7 +160,7 @@ app.get('/home/dashboard', (req, res, next) => {
 		console.log("Sesion en Login: ", req.session)
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM users WHERE id = ?", user[0].id, (err, data) => {
-				res.render('dashboard', {title: "Dashboard", data: data[0]});
+				res.render('dashboard', {title: "Dashboard", user: data[0], userLogued: req.session.user[0]});
 				console.log("Dashboard Correcto: ", data);
 			});
 		});
@@ -133,9 +172,9 @@ app.get('/home/dashboard', (req, res, next) => {
 app.get('/home/profile', (req, res, next) => {
 	if(req.session.user){
 		req.getConnection((err, conn) => {
-			conn.query("SELECT * FROM users WHERE id = ?", req.session.userId, (err, data) => {
+			conn.query("SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?", req.session.userId, (err, data) => {
 				console.log(data)
-				res.render('profile', {title: "Información del usuario", data: data[0]})
+				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0]})
 			});
 		});
 	}else{
@@ -143,6 +182,73 @@ app.get('/home/profile', (req, res, next) => {
 	}
 });
 // End - Profile
+
+app.post('/edit-profile-user', (req, res, next) => {
+	req.getConnection((err, conn) => {
+		let user = {
+			first_name: req.body.firstName_txt,
+			last_name: req.body.lastName_txt,
+			email: req.body.email_txt,
+			mob_no: Number(req.body.mob_no_txt),
+			user_name: req.body.nickname_txt,
+			area_working: req.body.areaWorking_txt
+		},
+			idUser = req.body.id_profile;
+		console.log("Informacion Usuario:", user);
+		//conn.query("UPDATE users SET first_name = ?, last_name = ?, email = ?, mob_no = ?, user_name = ?, area_working = ? WHERE id = ?", [user.first_name, user.last_name, user.email, user.mob_no, user.user_name, user.area_working, idUser], (err, data) => {
+		//conn.query(`UPDATE users SET first_name = ${user.first_name}, last_name = ${user.last_name}, email = ${user.email}, mob_no = ${user.mob_no}, user_name = ${user.user_name}, area_working = ${user.area_working} WHERE id = ${idUser}`, (err, data) => {
+		conn.query("UPDATE users SET ? WHERE id = ?",[user, idUser], (err, data) => {
+			if(!err){
+				console.log(data);
+				if(idUser == req.session.userId){
+					req.session.user[0].first_name = user.first_name;
+					req.session.user[0].last_name = user.last_name;
+					req.session.user[0].user_name = user.user_name;
+				}
+				res.redirect('/home/dashboard');
+			}else{
+				console.log("Error SQL", err)
+				res.redirect('/home/profile');
+			}
+		});
+		if(err) console.log("Error de Conexion:", err)
+	});
+});
+
+// View Users
+app.get('/home/users', (req, res, next) => {
+	if(req.session.user){
+		req.getConnection((err, conn) => {
+			let idUser = req.session.userId
+			conn.query(`SELECT * FROM users WHERE id != ${idUser}`, (err, data) => {
+				if(!err){
+					console.log(data);
+					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data });
+				}else console.log("Error: ", err)
+			});
+		});
+	}else{
+		res.redirect('/login');
+	}
+});
+// End- View Users
+
+// Edit user
+app.get('/home/edit-user/:id', (req, res, next) => {
+	if(req.session.user){
+		req.getConnection((err, conn) => {
+			let id = req.params.id;
+			console.log("ID: ", id)
+			conn.query("SELECT * FROM users WHERE users.id = ?", id, (err, data) => {
+				//console.log(data)
+				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0]})
+			});
+		});
+	}else{
+		res.redirect('/login');
+	}
+});
+// End -Edit user
 
 // Logout
 app.get('/home/logout', (req, res, next) => {

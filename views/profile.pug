@@ -4,32 +4,47 @@ block content
 	div.dashboard-profile__user
 		div.dashboard-profile__user-header
 			p.dashboard-profile__user-heading Perfil
-			a.dashboard-profile__user-link(href="#") Actualizar información
+			a.dashboard-profile__user-link(href="#", id="actInformation") Actualizar información
 		div.dashboard-profile__user-content
 			div.dashboard-profile__user-content-block1
-				img.dashboard-profile__user-content-image(src="/images/dashboard/tjmiller.jpg")
-				p.fline-height.dashboard-profile__user-content-fullname Juan Sebastian Moriones
-				p.fline-height.dashboard-profile__user-content-working Desarrollador de Software
+				div.dashboard-profile__user-content-image
+					img(src=`/images/dashboard/${user.imagen_avatar}`)
+					a.link-change-photo-profile(href="#", id="openFile")
+						i.fa-solid.fa-camera
+						p.link-change-photo-text Cambiar foto<br>del perfil
+					form(action="#" ,method="POST", encType="multipart/form-data", id="formInputPhoto")
+						input(type="file", name="photo_perfil", id="input-photo-perfil", style="display: none;", accept="image/jpeg,image/jpg,image/png")
+						input(type="button", style="display: none;")
+				p.fline-height.dashboard-profile__user-content-fullname #{user.first_name} #{user.last_name}
+				p.fline-height.dashboard-profile__user-content-working #{user.area_working}
+				a.dashboard-profile__user-content-close-link(href="/home/logout")
+					i.fa-solid.fa-arrow-right-from-bracket
+					| Cerrar sesión
 			div.dashboard-profile__user-content-block2
-				form.formulario-dashboard-userProfile(action="#", method="POST")
+				form.formulario-dashboard-userProfile(action="/edit-profile-user", method="POST", id="formulario-userProfile")
+					input(type="hidden", name="id_profile", value= user.id)
 					div
 						label.fline-height(for="fn") Primer Nombre
-						input.fline-height.campo__input(type="text", name="firstName_txt", id="fn", required)
+						input.fline-height.campo__input(type="text", value= user.first_name, name="firstName_txt", id="fn", readonly, required)
 					div
 						label.fline-height(for="ln") Segundo Nombre
-						input.fline-height.campo__input(type="text", name="lastName_txt", id="ln", required)
+						input.fline-height.campo__input(type="text", value= user.last_name, name="lastName_txt", id="ln", readonly, required)
 					div
 						label.fline-height(for="email") Correo electronico
-						input.fline-height.campo__input(type="email", name="email_txt", id="email", required)
+						input.fline-height.campo__input(type="email", value= user.email, name="email_txt", id="email", readonly, required)
 					div
 						label.fline-height(for="nphone") Celular
-						input.fline-height.campo__input(type="number", name="firstName_txt", id="nphone", required)
+						input.fline-height.campo__input(type="number", value= user.mob_no, name="mob_no_txt", id="nphone", readonly, required)
 					div
 						label.fline-height(for="nickname") Nickname
-						input.fline-height.campo__input(type="text", name="nickname_txt", id="nickname", required)
+						input.fline-height.campo__input(type="text", value= user.user_name, name="nickname_txt", id="nickname", readonly, required)
 					div.select-pais
 						label.fline-height(for="pais") Pais
 						select.fline-height(name="pais_slc", id="pais", required)
+							if user.country != null
+								option(selected)= user.name_country
+							else
+								option(selected) ----Seleccionar País----
 							option(value="Colombia") Colombia
 							option(value="Peru") Peru
 							option(value="Ecuador") Ecuador
@@ -37,6 +52,19 @@ block content
 							option(value="México") México
 					div
 						label.fline-height(for="area_working") Area de trabajo
-						input.fline-height.campo__input(type="text", name="areaWorking_txt", id="area_working", required)
+						input.fline-height.campo__input(type="text", value= user.area_working, name="areaWorking_txt", id="area_working", readonly, required)
 					div.div-btn-profile
-						input.campo__btn(type="submit", value="Guardar información", id="send-profile-info")
+						input.campo__btn.formulario-dashboard-userProfile-disabled(type="submit", value="Guardar información", id="send-profile-info")
+	script.
+		const inputs = document.querySelectorAll("#formulario-userProfile input"),
+			actInformation = document.querySelector("#actInformation"),
+			sendProfileUser = document.querySelector("#send-profile-info")
+		
+		actInformation.addEventListener("click", function(e){
+			e.preventDefault();
+			inputs.forEach(function(input){ input.removeAttribute("readonly") });
+			inputs[1].focus();
+			actInformation.style.pointerEvents = "none";
+			actInformation.style.backgroundColor = "#9E9E9E";
+			sendProfileUser.classList.remove("formulario-dashboard-userProfile-disabled")
+		});
