@@ -250,6 +250,20 @@ app.get('/home/edit-user/:id', (req, res, next) => {
 });
 // End -Edit user
 
+// Delete user
+app.get('/home/delete-user/:id', (req, res, next) => {
+	req.getConnection((err, conn) => {
+		let id = req.params.id;
+		conn.query("DELETE FROM users WHERE id = ?", id, (err, data) => {
+			if(err)
+				return next( new Error('Registro no Encontrado') );
+			else
+				res.redirect('/home/users')
+		});
+	});
+});
+// End - Delete user
+
 // Logout
 app.get('/home/logout', (req, res, next) => {
 	req.session.destroy(function(err) {
