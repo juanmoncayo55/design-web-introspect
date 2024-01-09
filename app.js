@@ -11,6 +11,7 @@ const express = require('express'),
 	mysql = require('mysql'),
 	myConnection = require('express-myconnection'),
 	fileUpload = require('express-fileupload'),
+	webp = require('webp-converter'),
 	dbOptions = {
 		host: "localhost",
 		user: "root",
@@ -33,7 +34,13 @@ app.set('port', port);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());
-app.use(fileUpload());
+app.use(fileUpload({
+	useTempFiles: true,
+	tempFileDir: 'public/images/dashboard/tmp/',
+	limits: {
+		filesize: 2 * 1024 * 1024 // 2mb limit
+	}
+}));
 app.use(publicDir);
 app.use(favicon);
 
@@ -45,6 +52,8 @@ app.use(session({
 	saveUninitialized: true,
 	cookie: {maxAge: 30 * 60 * 1000}
 }));
+
+webp.grant_permission();
 
 // Index(Home)
 app.get('/', (req, res, next) => {
@@ -88,20 +97,35 @@ app.post('/signup', (req, res, next) => {
 app.post('/upload-image', (req, res, next) => {
 	let photoPerfil;
 	let uploadPath;
+	let formatImageUpload;
+	let name_photo;
 	if(!req.files || Object.keys(req.files).length == 0){
 		return res.status(400).json({message: "Ningun archivo fue cargado."});
 	}
 	photoPerfil = req.files.photo_perfil;
-	uploadPath = __dirname + '/public/images/dashboard/' + photoPerfil.name;
+	formatImageUpload = photoPerfil.mimetype.substr(6,9);
+	name_photo = `${req.body.id_user}.webp`;
+	//console.log(req.files.photo_perfil)
 
+	//Hacemos la conversion "webp" del archivo a subir
+	const convertImageToWebp = webp.cwebp(req.files.photo_perfil.tempFilePath, `/public/images/dashboard/${name_photo}`,"-q 70 -lossless");
+	//Rescibo la respuesta de la conversion de la imagen (Por defecto nos devuelve un error, por eso lo comentamos)
+	/*convertImageToWebp.then((response) => {
+		console.log(response);
+	});*/
+
+	//Direccion donde se encuentra alojada la imagen en la carpeta de trabajo
+	uploadPath = __dirname + '/public/images/dashboard/' + name_photo;
+	//uploadPath = `${__dirname}/public/images/dashboard/${req.session.userId}.${formatImageUpload}`;
+
+	//Movemos el archivo a la carpeta del servidor
 	photoPerfil.mv(uploadPath, (err) => {
 		if (err)
-		      return res.status(500).send(err);
+		      return res.status(500).json(err);
 		else{
 			//console.log("Url del archivo: ", uploadPath);
 			//console.log("photoPerfil: ", photoPerfil.name);
-			let id_profile = req.body.id_user,
-				name_photo = photoPerfil.name;
+			let id_profile = req.body.id_user;
 
 			req.getConnection((err, conn) =>{
 				// users SET first_name = ? WHERE id = ${idUser}
@@ -109,7 +133,7 @@ app.post('/upload-image', (req, res, next) => {
 					if(err)
 						res.status(502).json({error: "Error en la Base de Datos"});
 					else{
-						res.status(200).json({success: "Archivo subido con exito :D"});
+						res.status(200).json({success: "Archivo subido con exito :D", namePhoto: name_photo});
 					}
 				});
 			});

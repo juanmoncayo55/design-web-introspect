@@ -21,6 +21,7 @@ block content
 					i.fa-solid.fa-arrow-right-from-bracket
 					| Cerrar sesión
 			div.dashboard-profile__user-content-block2
+				div.spinner-content
 				form.formulario-dashboard-userProfile(action="/edit-profile-user", method="POST", id="formulario-userProfile")
 					input(type="hidden", name="id_profile", value= user.id)
 					div

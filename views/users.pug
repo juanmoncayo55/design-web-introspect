@@ -2,6 +2,11 @@ extends dashboard.pug
 
 block content
     section.dashboard-users__show
+        div.dashboard-profile__user-header
+            p.dashboard-profile__user-heading.table-title-heading Lista de Usuarios
+            a.dashboard-profile__user-link.table-header-button(href="#", id="openPopupAddUser")
+                i.fa-solid.fa-user-plus
+                | Agregar un usuario
         table.table
             thead
                 tr
@@ -30,4 +35,19 @@ block content
                         td.centrar-text
                             a.table-action.delete(href=`/home/delete-user/${user.id}`, title="Eliminar")
                                 i.fa-regular.fa-trash-can
-        // each user in users
+        div#popUp-user.overlay.closeWindowUser
+            div.popUp-user
+                include addUser.pug
+
+    script.
+        const popUpUser = document.querySelector("#popUp-user"),
+            openPopupAddUser = document.querySelector("#openPopupAddUser"),
+            closePopupUser = document.querySelector("#closePopUpUserAdd");
+        closePopupUser.addEventListener("click", function(e){
+            e.preventDefault();
+            popUpUser.classList.toggle("closeWindowUser");
+        });
+        openPopupAddUser.addEventListener("click", function(e){
+            e.preventDefault();
+            popUpUser.classList.toggle("closeWindowUser");
+        });

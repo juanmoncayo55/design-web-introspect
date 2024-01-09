@@ -1,0 +1,14 @@
+h4.read-articles__title.addUser-title Agregar un nuevo Usuario
+form.formulario.signup-formulario(method="POST", action="#", id="signup-form")
+    .campo
+        input.campo__input(type='text', name="firstName_txt", placeholder="Primer Nombre", id="firstName", autocomplete='off', required)
+    .campo
+        input.campo__input(type='text', name="lastName_txt", placeholder="Primer Apellido", id="lastName", autocomplete='off', required)
+    .campo
+        input.campo__input(type='number', name="mobileNumber_text", placeholder="Número de celular", id="numberMb", autocomplete='off', required)
+    .campo
+        input.campo__input(type='text', name="nickname_txt", placeholder="Nickname", id="nickname", autocomplete='off', required)
+    .campo
+        input.campo__input(type='password', name="password_psw", placeholder="Contraseña", id="password", autocomplete='off', required)
+    input.boton.formulario__send(type='submit' value='Enviar Formulario')
+    a#closePopUpUserAdd.boton.closePopUpUserAddStyle(href="#") Cerrar

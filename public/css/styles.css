@@ -604,6 +604,8 @@ img{max-width: 100%;}
 .dashboard-profile__user-content-image img{
 	border-radius: 50%;
 	width: 100%;
+	object-fit: cover;
+	height: 100%;
 }
 .link-change-photo-profile{
 	position: absolute;
@@ -740,5 +742,35 @@ img{max-width: 100%;}
     color: white;
     border-radius: 0.8rem;
     font-size: 1.6rem;
+	transition: .3s opacity ease-in-out;
 }
 .table-action.delete{ background-color: #bc282c;}
+.table-title-heading{color: #e5474b;font-weight: bold;}
+.table-header-button i{margin-right: .5rem;}
+.table-action:hover, .closePopUpUserAddStyle:hover{opacity: .75;}
+/* Overlay for Popup Add-User */
+.overlay{
+	position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #212121ad;
+}
+.popUp-user{
+	width: 70rem;
+    max-width: 70%;
+    margin: 0 auto;
+	margin-top: 4rem;
+    background-color: #FFF;
+    padding: 3rem 2rem;
+}
+.addUser-title{margin-bottom: 2rem;}
+.closePopUpUserAddStyle{
+	background: #000;
+    line-height: 1.4rem;
+    font-size: 1.4rem;
+    padding: 1.5rem 3rem;
+	transition: .3s opacity ease-in-out;
+}
+.closeWindowUser{display:none;}
