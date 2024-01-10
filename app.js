@@ -196,9 +196,17 @@ app.get('/home/dashboard', (req, res, next) => {
 app.get('/home/profile', (req, res, next) => {
 	if(req.session.user){
 		req.getConnection((err, conn) => {
+			//Creando una variable para insertar los paises en forma de objetos
+			let paises;
+			//Trayendo los paises de la base de datos
+			conn.query('SELECT id AS id_country, name_country FROM countrys ORDER BY name_country ASC', (err, data) => {
+				if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
+				else paises = data;
+			});
+
 			conn.query("SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?", req.session.userId, (err, data) => {
 				console.log(data)
-				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0]})
+				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0], paises: paises})
 			});
 		});
 	}else{
@@ -215,6 +223,7 @@ app.post('/edit-profile-user', (req, res, next) => {
 			email: req.body.email_txt,
 			mob_no: Number(req.body.mob_no_txt),
 			user_name: req.body.nickname_txt,
+			country: req.body.pais_slc,
 			area_working: req.body.areaWorking_txt
 		},
 			idUser = req.body.id_profile;
@@ -243,11 +252,12 @@ app.post('/edit-profile-user', (req, res, next) => {
 app.get('/home/users', (req, res, next) => {
 	if(req.session.user){
 		req.getConnection((err, conn) => {
-			let idUser = req.session.userId
-			conn.query(`SELECT * FROM users WHERE id != ${idUser}`, (err, data) => {
+			let idUser = req.session.userId;
+			//SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?
+			conn.query(`SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id != ${idUser}`, (err, data) => {
 				if(!err){
 					console.log(data);
-					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data });
+					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data});
 				}else console.log("Error: ", err)
 			});
 		});
@@ -262,10 +272,17 @@ app.get('/home/edit-user/:id', (req, res, next) => {
 	if(req.session.user){
 		req.getConnection((err, conn) => {
 			let id = req.params.id;
-			console.log("ID: ", id)
-			conn.query("SELECT * FROM users WHERE users.id = ?", id, (err, data) => {
-				//console.log(data)
-				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0]})
+
+			//Creando una variable para insertar los paises en forma de objetos
+			let paises;
+			//Trayendo los paises de la base de datos
+			conn.query('SELECT id AS id_country, name_country FROM countrys ORDER BY name_country ASC', (err, data) => {
+				if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
+				else paises = data;
+			});
+
+			conn.query("SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?", id, (err, data) => {
+				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0], paises: paises})
 			});
 		});
 	}else{

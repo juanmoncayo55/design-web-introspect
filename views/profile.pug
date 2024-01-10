@@ -46,11 +46,8 @@ block content
 								option(selected)= user.name_country
 							else
 								option(selected) ----Seleccionar País----
-							option(value="Colombia") Colombia
-							option(value="Peru") Peru
-							option(value="Ecuador") Ecuador
-							option(value="Venezuela") Venezuela
-							option(value="México") México
+							each pais in paises
+								option(value= pais.id_country)= pais.name_country
 					div
 						label.fline-height(for="area_working") Area de trabajo
 						input.fline-height.campo__input(type="text", value= user.area_working, name="areaWorking_txt", id="area_working", readonly, required)
