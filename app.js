@@ -260,7 +260,7 @@ app.get('/home/users', (req, res, next) => {
 			});
 
 			let idUser = req.session.userId;
-			conn.query(`SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id != ${idUser}`, (err, data) => {
+			conn.query(`SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id != ${idUser} ORDER BY users.id DESC`, (err, data) => {
 				if(!err){
 					console.log(data);
 					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data, paises});
@@ -321,6 +321,62 @@ app.get('/home/logout', (req, res, next) => {
    })
 });
 // End - Logout
+
+// Add User
+app.post('/user-add', (req, res, next) => {
+	//console.log(req.files)
+	//console.log(req.body);
+	let photoPerfil, name_photo, uploadPath, id_user;
+
+	let user = {
+		first_name: req.body.firstName_txt,
+		last_name: req.body.lastName_txt,
+		mob_no: req.body.mobileNumber_text,
+		user_name: req.body.nickname_txt,
+		password: req.body.password_psw,
+		email: req.body.email_txt,
+		country: req.body.pais_slc,
+		area_working: req.body.areaWorking_txt
+	}
+	req.getConnection((err, conn) => {
+		//Antes de agregar la informacion del usuario, realizo la verificacion de la subida del archivo.
+		if(!req.files || Object.keys(req.files).length == 0){
+			return res.status(400).json({message: "Ningun archivo fue cargado."});
+		}
+		photoPerfil = req.files.image_user_file;
+
+		conn.query('INSERT INTO users SET ?', user,(err, data) => {
+			if(err) res.status(500).json({error: "No se inserto el usuario"});
+			else{
+				name_photo = `${data.insertId}.webp`;
+
+				const convertImageToWebp = webp.cwebp(photoPerfil.tempFilePath, `/public/images/dashboard/${name_photo}`,"-q 70 -lossless");
+
+				uploadPath = __dirname + '/public/images/dashboard/' + name_photo;
+
+				photoPerfil.mv(uploadPath, (err) => {
+					if (err)
+					      return res.status(500).json(err);
+					else{
+						let id_profile = data.insertId;
+						req.getConnection((err, conn) =>{
+							conn.query("UPDATE users SET imagen_avatar = ? WHERE id = ?", [name_photo, data.insertId], (err, data) => {
+								if(err)
+									res.status(502).json({error: "Error en la Base de Datos"});
+								else{
+									res.status(200).json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
+								}
+							});
+						});
+					}
+				});
+
+				//res.status(200).json({message: "Se registro el usuario correctamente", data});
+			}
+		});
+	});
+});
+// End - Add User
 
 // Page Not Found (404)
 app.use((req, res, next) => {

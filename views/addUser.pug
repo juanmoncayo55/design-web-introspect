@@ -1,25 +1,57 @@
 h4.read-articles__title.addUser-title Agregar un nuevo Usuario
-form.formulario.signup-formulario.formulario-addUser(method="POST", action="#", id="signup-form")
+form.formulario.signup-formulario.formulario-addUser(method="POST", id="form-add-user")
     .campo
-        input.campo__input(type='text', name="firstName_txt", placeholder="Primer Nombre", id="firstName", autocomplete='off', required)
+        input.campo__input(type='text', name="firstName_txt", placeholder="Primer Nombre", id="firstName", autocomplete='off')
     .campo
-        input.campo__input(type='text', name="lastName_txt", placeholder="Primer Apellido", id="lastName", autocomplete='off', required)
+        input.campo__input(type='text', name="lastName_txt", placeholder="Primer Apellido", id="lastName", autocomplete='off')
     .campo
-        input.campo__input(type='number', name="mobileNumber_text", placeholder="Número de celular", id="numberMb", autocomplete='off', required)
+        input.campo__input(type='number', name="mobileNumber_text", placeholder="Número de celular", id="numberMb", autocomplete='off')
     .campo
-        input.campo__input(type='text', name="nickname_txt", placeholder="Nickname", id="nickname", autocomplete='off', required)
+        input.campo__input(type='text', name="nickname_txt", placeholder="Nickname", id="nickname", autocomplete='off')
     .campo
-        input.campo__input(type='password', name="password_psw", placeholder="Contraseña", id="password", autocomplete='off', required)
+        input.campo__input(type='password', name="password_psw", placeholder="Contraseña", id="password", autocomplete='off')
     .campo
-        input.fline-height.campo__input(type="email", name="email_txt", placeholder="Correo electronico" id="email", autocomplete="off", required)
+        input.fline-height.campo__input(type="email", name="email_txt", placeholder="Correo electronico" id="email", autocomplete="off")
     .campo
-        input.formulario-addUser__btnUploadImage(type='file', name="image-user_file", id="image-user-avatar")
+        input.formulario-addUser__btnUploadImage(type='file', name="image_user_file", id="image-user-avatar")
     .select-pais
-        select.fline-height(name="pais_slc", id="pais", required)
+        select.fline-height(name="pais_slc", id="pais")
             option ---- Seleccionar País
             each pais in paises
                 option(value= pais.id_country)= pais.name_country
     .campo
-        input.fline-height.campo__input(type="text", name="areaWorking_txt", id="area_working", placeholder="Area de trabajo", required)
+        input.fline-height.campo__input(type="text", name="areaWorking_txt", id="area_working", placeholder="Area de trabajo")
+    div.spinner-content
     input.boton.formulario__send(type='submit' value='Enviar Formulario')
     a#closePopUpUserAdd.boton.closePopUpUserAddStyle(href="#") Cerrar
+
+    script.
+        const formAddUser = document.querySelector("#form-add-user");
+        const spinnerContent = document.querySelector(".spinner-content");
+
+        //Creando elemento alert para avisar que se registro el usuario
+        const successMessage = document.createElement("DIV");
+            successMessage.setAttribute('id', 'popSuccessUser');
+            successMessage.classList.add('overlay', 'overlay-success');
+
+        formAddUser.onsubmit = function(event){
+            event.preventDefault();
+            spinnerContent.innerHTML = `<div class="fa-3x"><i class=" fas fa-spinner fa-pulse"></i></div>`;
+            successMessage.innerHTML = "<div class='overlay-success-container'><i class='fa-solid fa-check-double'></i><span>Usuario agregado con exito</span></div>";
+            const formDataUser = new FormData(formAddUser);
+            fetch('/user-add', {
+                method: "POST",
+                body: formDataUser
+            })
+            .then(response => response.json())
+            .then(success => {
+                console.log(success);
+                if(success.message)
+                    spinnerContent.style.display = "none";
+
+                popUpUser.classList.toggle("closeWindowUser");
+                document.body.appendChild(successMessage);
+                setTimeout(function(){successMessage.remove()}, 4000);
+            })
+            .catch(error => console.log(error));
+        };

@@ -38,6 +38,11 @@ block content
         div#popUp-user.overlay.closeWindowUser
             div.popUp-user
                 include addUser.pug
+        
+        //div#popSuccessUser.overlay.overlay-success
+            div.overlay-success-container
+                i.fa-solid.fa-check-double
+                | Usuario agregado con exito
 
     script.
         const popUpUser = document.querySelector("#popUp-user"),
