@@ -252,12 +252,18 @@ app.post('/edit-profile-user', (req, res, next) => {
 app.get('/home/users', (req, res, next) => {
 	if(req.session.user){
 		req.getConnection((err, conn) => {
+
+			let paises;
+			conn.query('SELECT id AS id_country, name_country FROM countrys ORDER BY name_country ASC', (err, data) => {
+				if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
+				else paises = data;
+			});
+
 			let idUser = req.session.userId;
-			//SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?
 			conn.query(`SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id != ${idUser}`, (err, data) => {
 				if(!err){
 					console.log(data);
-					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data});
+					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data, paises});
 				}else console.log("Error: ", err)
 			});
 		});

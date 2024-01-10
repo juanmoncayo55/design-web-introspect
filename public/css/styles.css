@@ -487,6 +487,44 @@ img{max-width: 100%;}
     padding: 5px 16px;
 	transition: .2s opacity ease-in-out;
 }
+.formulario-addUser__btnUploadImage{
+	visibility: hidden;
+	display: flex;
+	width: 28rem;
+	max-width: 100%;
+	height: 5rem;
+	position: relative;
+}
+.formulario-addUser__btnUploadImage:after {
+	content: "\f093";
+    font-family: FontAwesome;
+    visibility: visible;
+    display: block;
+    cursor: pointer;
+    padding: 1rem 1.8rem;
+    border: 2px solid var(--primario);
+    color: #565656;
+    font-size: 1.9rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+	transition: .5s all ease-in-out;
+}
+.formulario-addUser__btnUploadImage:before {
+    content: "Agregar una imagen";
+    position: relative;
+    visibility: visible;
+    line-height: 4.5rem;
+    padding-left: 5rem;
+    font-size: 1.6rem;
+    color: var(--primario);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.formulario-addUser__btnUploadImage:hover::after {
+    background-color: #e5474b17;
+}
 .dashboard-panel__header-btn:hover, .dashboard-profile__user-link:hover{opacity: .85;}
 .dashboard-panel__header-btn i{margin-right: .5rem;}
 .dashboard-panel__header-message, .dashboard-panel__header-notification{
@@ -660,7 +698,7 @@ img{max-width: 100%;}
 	border: 0;
 	border-bottom: 3px solid var(--primario);
 }
-.formulario-dashboard-userProfile select{
+.formulario-dashboard-userProfile select, .formulario-addUser .select-pais select{
 	border: 3px solid rgb(229 71 75 / 21%);
     color: #616161;
     padding: 0.8rem 1.2rem;
@@ -672,6 +710,7 @@ img{max-width: 100%;}
     -moz-appearance: none;
     appearance: none;
 }
+.formulario-addUser .select-pais{margin-bottom: 1.8rem;}
 .select-pais{
 	position: relative;
 	max-width: 28rem;
@@ -764,6 +803,8 @@ img{max-width: 100%;}
 	margin-top: 4rem;
     background-color: #FFF;
     padding: 3rem 2rem;
+	height: 85%;
+    overflow-y: scroll;
 }
 .addUser-title{margin-bottom: 2rem;}
 .closePopUpUserAddStyle{
