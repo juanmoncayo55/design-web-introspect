@@ -906,8 +906,8 @@ img{max-width: 100%;}
     padding: 12rem 0;
 }
 .somos-title-text__pagraph {
-	line-height: 6.5rem;
-    font-size: 6rem;
+	line-height: 8.5rem;
+	font-size: 8rem;
     font-weight: 900;
     text-transform: uppercase;
     text-align: center;
@@ -917,4 +917,87 @@ img{max-width: 100%;}
 	font-family: var(--fuenteLogo);
 	text-transform: capitalize;
 	font-weight: normal;
+}
+.somos-description{
+	padding: 12rem 0;
+	box-shadow: 0px 0px 5px #21212187;
+    position: relative;
+    z-index: 1;
+}
+.somos-description-container{
+	width: 90%;
+    max-width: 58rem;
+    text-align: center;
+    margin: 0 auto;
+}
+.somos-description__text{
+	font-family: 'Instrument Serif', serif;
+    font-size: 2.2rem;
+    color: #000;
+    line-height: 3rem;
+}
+.somos-description-icon-small{
+	text-align: center;
+    width: 4rem;
+    height: 4rem;
+    border: 2px solid var(--primario);
+    padding: 0.5rem;
+    box-sizing: content-box;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+	margin: 0 auto;
+    margin-top: 5rem;
+}
+.somos-description-icon-small .text-icon{
+	color: var(--primario);
+    font-family: var(--fuenteLogo);
+    font-weight: normal;
+    font-size: 3.5rem;
+    line-height: 3.5rem;
+}
+.somos-team-information{
+	padding: 12rem 0;
+    background-color: #f5f4f0;
+}
+.somos-team-information_container{
+	display: grid;
+    grid-template-areas:
+        "figure1 figure2"
+        "texto1 texto1"
+        "texto2 texto2"
+        "texto3 texto3";
+    column-gap: 3rem;
+}
+.somos-team-profile:nth-child(1){grid-area: figure1;width: 70%;margin: 0 0 0 auto;}
+.somos-team-profile:nth-child(2){grid-area: figure2;width: 70%;margin: 0 auto 0 0;}
+.somos-team-information__text.tc1{grid-area: texto1;}
+.somos-team-information__middel-text{grid-area: texto2;}
+.somos-team-information__text.tc2{grid-area: texto3;}
+.somos-team-information__text, .somos-team-information__middel-text, .somos-history-information__text{
+	margin-top: 4rem;
+    line-height: 3rem;
+    font-family: 'Instrument Serif', serif;
+    font-size: 2.2rem;
+}
+.somos-team-information__middel-text{
+font-size: 2.6rem;
+}
+.somos-team-profile img {
+    /*width: 20rem;
+    height: 20rem;*/
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.somos-team-profile .somos-team-profile__caption, .somos-team-information__middel-text {
+    line-height: normal;
+    font-family: var(--fuenteLogo);
+    color: var(--primario);
+    font-size: 2rem;
+}
+.somos-history-information{
+    background-color: var(--primario);
+    color: #FFF;
+	padding: 12rem 0;
 }
