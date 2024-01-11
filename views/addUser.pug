@@ -1,26 +1,26 @@
 h4.read-articles__title.addUser-title Agregar un nuevo Usuario
 form.formulario.signup-formulario.formulario-addUser(method="POST", id="form-add-user")
     .campo
-        input.campo__input(type='text', name="firstName_txt", placeholder="Primer Nombre", id="firstName", autocomplete='off')
+        input.campo__input(type='text', name="firstName_txt", placeholder="Primer Nombre", id="firstName", autocomplete='off', required)
     .campo
-        input.campo__input(type='text', name="lastName_txt", placeholder="Primer Apellido", id="lastName", autocomplete='off')
+        input.campo__input(type='text', name="lastName_txt", placeholder="Primer Apellido", id="lastName", autocomplete='off', required)
     .campo
-        input.campo__input(type='number', name="mobileNumber_text", placeholder="Número de celular", id="numberMb", autocomplete='off')
+        input.campo__input(type='number', name="mobileNumber_text", placeholder="Número de celular", id="numberMb", autocomplete='off', required)
     .campo
-        input.campo__input(type='text', name="nickname_txt", placeholder="Nickname", id="nickname", autocomplete='off')
+        input.campo__input(type='text', name="nickname_txt", placeholder="Nickname", id="nickname", autocomplete='off', required)
     .campo
-        input.campo__input(type='password', name="password_psw", placeholder="Contraseña", id="password", autocomplete='off')
+        input.campo__input(type='password', name="password_psw", placeholder="Contraseña", id="password", autocomplete='off', required)
     .campo
-        input.fline-height.campo__input(type="email", name="email_txt", placeholder="Correo electronico" id="email", autocomplete="off")
+        input.fline-height.campo__input(type="email", name="email_txt", placeholder="Correo electronico" id="email", autocomplete="off", required)
     .campo
-        input.formulario-addUser__btnUploadImage(type='file', name="image_user_file", id="image-user-avatar")
+        input.formulario-addUser__btnUploadImage(type='file', name="image_user_file", id="image-user-avatar", required)
     .select-pais
-        select.fline-height(name="pais_slc", id="pais")
+        select.fline-height(name="pais_slc", id="pais", required)
             option ---- Seleccionar País
             each pais in paises
                 option(value= pais.id_country)= pais.name_country
     .campo
-        input.fline-height.campo__input(type="text", name="areaWorking_txt", id="area_working", placeholder="Area de trabajo")
+        input.fline-height.campo__input(type="text", name="areaWorking_txt", id="area_working", placeholder="Area de trabajo", required)
     div.spinner-content
     input.boton.formulario__send(type='submit' value='Enviar Formulario')
     a#closePopUpUserAdd.boton.closePopUpUserAddStyle(href="#") Cerrar

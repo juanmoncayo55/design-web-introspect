@@ -50,6 +50,67 @@ img{max-width: 100%;}
 }
 .dnone{display:none;}
 .fline-height{line-height: normal;}
+/** Top Header option **/
+.top-header__options{
+	background-color: #f3f3f3;
+    color: var(--negro);
+    padding: 0.3rem 0;
+}
+.top-header__contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	font-size: 1.5rem;
+}
+.top-header__contenedor .text-location{
+	display: flex;
+    align-items: center;
+}
+.top-header__contenedor .text-location i{
+	font-size: 1.8rem;
+    color: #e5474a;
+    margin-right: 1rem;
+}
+.social-network{
+	font-size: 1.9rem;
+    display: flex;
+    column-gap: 1rem;
+}
+.social-network--login .social-network{
+    font-size: 1.8rem;
+}
+.social-network a {
+    height: 3rem;
+    width: 3rem;
+    display: grid;
+    place-content: center;
+	padding: 0 1.8rem;
+}
+.social-network a:nth-child(2) {
+    border-left: 1px solid var(--primario);
+    border-right: 1px solid var(--primario);
+}
+.social-network a:nth-child(3) {
+    border-right: 1px solid var(--primario);
+}
+.social-network a i {
+    color: var(--primario);
+}
+.social--login, .social-network--login{
+	display: flex;
+    align-items: center;
+    column-gap: 2rem;
+}
+.social-network--login{column-gap: 4rem;}
+.social-network--login a.login {
+    color: var(--negro);
+	font-weight: bold;
+}
+
+.social-network--login a.login:hover, .social-network a i:hover{
+    color: var(--primario);
+	text-decoration: underline;
+}
 /** Header **/
 .header{
 	background-color: var(--negro);
@@ -837,3 +898,23 @@ img{max-width: 100%;}
 	transition: .3s opacity ease-in-out;
 }
 .closeWindowUser{display:none;}
+
+/* Somos */
+.somos-title-text{
+	background-color: var(--grisOscuro);
+	background-image: url("/images/texture.jpg");
+    padding: 12rem 0;
+}
+.somos-title-text__pagraph {
+	line-height: 6.5rem;
+    font-size: 6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+}
+.somos-title-text__pagraph span{
+	color: var(--primario);
+	font-family: var(--fuenteLogo);
+	text-transform: capitalize;
+	font-weight: normal;
+}

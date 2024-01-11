@@ -378,6 +378,12 @@ app.post('/user-add', (req, res, next) => {
 });
 // End - Add User
 
+// Páginas
+app.get('/somos', (req, res, next) => {
+	res.render('somos', {title: "Quienes Somos - Introspect"})
+});
+// End - Páginas
+
 // Page Not Found (404)
 app.use((req, res, next) => {
 	let err = new Error();
