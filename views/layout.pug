@@ -36,10 +36,50 @@ html(lang="es")
 				.logo
 					a.no-margin.logo__title(href='/')
 						| introspect
-				nav.navigation
-					a.navigation__link(href='/') Inicio
-					a.navigation__link(href='/somos') Somos
-					a.navigation__link(href='#') Blog
-					a.navigation__link(href='#') Contactanos
+				.navigation-overflow.hideNavigationMob#containerNavMob
+					nav.navigation
+						a.navigation__link(href='/') Inicio
+						a.navigation__link(href='/somos') Somos
+						a.navigation__link(href='#') Blog
+						a.navigation__link(href='#') Contactanos
+					a.navigation-mobile-close(href="#", id="closeMenuMob")
+						i.fas.fa-times
+				a.navigation-mobile-open(href="#", id="hamburguerMenuMob")
+					i.fas.fa-bars
 		block content
 		script(src="/js/codigo.js")
+		script.
+			const hamburguerMenuMob = document.querySelector("#hamburguerMenuMob");
+			const containerNavMob = document.querySelector("#containerNavMob");
+			const headerNavigation = document.querySelector(".header-contenedor .navigation");
+			const navigation = document.querySelector(".navigation");
+			const closeMenuMob = document.querySelector("#closeMenuMob");
+
+			hamburguerMenuMob.addEventListener("click", function(e){
+				e.preventDefault();
+				/*containerNavMob.style.visibility="visible";
+				containerNavMob.style.transform="translateX(0px)";
+				containerNavMob.style.transitionDuration=".8s";
+				containerNavMob.style.transitionProperty = "transform";
+
+				navigation.style.transform="translateX(0px)";
+				navigation.style.transitionDuration="2s";
+				navigation.style.transitionProperty = "transform";*/
+
+				containerNavMob.classList.add("showMenuMobOverlay");
+				navigation.classList.add("shoMenuMob");
+			});
+			closeMenuMob.addEventListener("click", function(e){
+				e.preventDefault();
+				/*navigation.style.transform="translateX(-700px)";
+				navigation.style.transitionDuration=".5s";
+				navigation.style.transitionProperty = "transform";
+
+				containerNavMob.style.transform="translateX(-1500px)";
+				containerNavMob.style.transitionDuration="4s";
+				containerNavMob.style.transitionProperty = "transform";
+				if(containerNavMob.style.translateX == "-1500px"){containerNavMob.style.visibility="hidden";}*/
+				
+				containerNavMob.classList.remove("showMenuMobOverlay");
+				navigation.classList.remove("shoMenuMob");
+			});
