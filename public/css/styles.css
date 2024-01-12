@@ -992,6 +992,31 @@ img{max-width: 100%;}
     text-transform: uppercase;
     text-align: center;
 }
+@media (max-width: 650px){
+	.somos-title-text__pagraph{
+	    font-size: 6rem;
+		line-height: 6.5rem;
+	}
+}
+@media (max-width: 540px){
+	.somos-title-text__pagraph{
+		line-height: 5.5rem;
+		font-size: 5rem;
+	}
+}
+@media (max-width: 420px){
+	.somos-title-text__pagraph{
+		line-height: 4.5rem;
+		font-size: 4rem;
+	}
+}
+@media (max-width: 320px){
+	.somos-title-text__pagraph{
+		line-height: 3.5rem;
+	    font-size: 3rem;
+	}
+}
+
 .somos-title-text__pagraph span{
 	color: var(--primario);
 	font-family: var(--fuenteLogo);
