@@ -57,28 +57,12 @@ html(lang="es")
 
 			hamburguerMenuMob.addEventListener("click", function(e){
 				e.preventDefault();
-				/*containerNavMob.style.visibility="visible";
-				containerNavMob.style.transform="translateX(0px)";
-				containerNavMob.style.transitionDuration=".8s";
-				containerNavMob.style.transitionProperty = "transform";
-
-				navigation.style.transform="translateX(0px)";
-				navigation.style.transitionDuration="2s";
-				navigation.style.transitionProperty = "transform";*/
 
 				containerNavMob.classList.add("showMenuMobOverlay");
 				navigation.classList.add("shoMenuMob");
 			});
 			closeMenuMob.addEventListener("click", function(e){
 				e.preventDefault();
-				/*navigation.style.transform="translateX(-700px)";
-				navigation.style.transitionDuration=".5s";
-				navigation.style.transitionProperty = "transform";
-
-				containerNavMob.style.transform="translateX(-1500px)";
-				containerNavMob.style.transitionDuration="4s";
-				containerNavMob.style.transitionProperty = "transform";
-				if(containerNavMob.style.translateX == "-1500px"){containerNavMob.style.visibility="hidden";}*/
 				
 				containerNavMob.classList.remove("showMenuMobOverlay");
 				navigation.classList.remove("shoMenuMob");
