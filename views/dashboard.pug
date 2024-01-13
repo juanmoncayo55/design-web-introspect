@@ -17,6 +17,8 @@ html(lang="es")
 			div.dashboard-panel-left
 				.logo
 					a.no-margin.logo__title(href='/') introspect
+				a.navigation-mobile-open.navigation-mobile-dashboard(href="#", id="hamburguerMenuDashboard")
+					i.fas.fa-bars
 				ul.dashboard-navigation
 					a.dashboard-navigation-link(href="/home/dashboard")
 						i.fa-solid.fa-house-chimney
@@ -38,9 +40,6 @@ html(lang="es")
 					form.dashboard-panel__form(action="/", method="GET")
 						input.dashboard-panel__form-input(type="text", name="search-dashboard_txt", id="search-dashboard", placeholder="Search", required)
 					div.dashboard-panel__header-options
-						a.dashboard-panel__header-btn(href="#")
-							i.fa-solid.fa-plus
-							| Agregar Proyecto
 						div.dashboard-panel__header-message
 							a.icon(href="#")
 								i.fa-solid.fa-envelope
@@ -77,10 +76,16 @@ html(lang="es")
 		script.
 			(function(c, d){
 				const userR = d.querySelector("#user-r"),
-					panelUserMenu = d.querySelector(".dashboard-panel__header-user-menu");
+					panelUserMenu = d.querySelector(".dashboard-panel__header-user-menu"),
+					dashboardNavigation = d.querySelector(".dashboard-navigation"),
+					hamburguerMenuDashboard = d.querySelector("#hamburguerMenuDashboard");
 
 				userR.addEventListener("click", function(e){
 					e.preventDefault();
 					panelUserMenu.classList.toggle("showPanMenu")
+				});
+				hamburguerMenuDashboard.addEventListener("click", function(e){
+					e.preventDefault();
+					dashboardNavigation.classList.toggle("transitionMenuDash");
 				});
 			})(console.log, document);

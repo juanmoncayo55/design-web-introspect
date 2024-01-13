@@ -4,6 +4,19 @@
         formInputPhoto = d.querySelector("#formInputPhoto"),
         spinnerContent = d.querySelector(".spinner-content");
 
+
+    let pathName = window.location.pathname;
+    if(pathName === '/home/dashboard'){
+        document.querySelector(".dashboard-navigation-link:nth-child(1)").classList.add("dashboard-navigation-link-active");
+    }else if(pathName === '/home/blog'){
+        document.querySelector(".dashboard-navigation-link:nth-child(3)").classList.add("dashboard-navigation-link-active");
+    }else if(pathName === '/home/users'){
+        document.querySelector(".dashboard-navigation-link:nth-child(4)").classList.add("dashboard-navigation-link-active");
+    }else{
+        document.querySelector(".dashboard-navigation-link").classList.remove("dashboard-navigation-link-active");
+    }
+
+
     openFile.addEventListener("click", function(e){
         e.preventDefault()
         // Abro el explorador de archivos de windows

@@ -22,7 +22,9 @@ const express = require('express'),
 	conn = myConnection(mysql, dbOptions, 'request'),
 	path = require('path'),
 	cors = require('cors');
+
 const { v4: uuidv4 } = require('uuid');
+
 let app = express();
 
 //app.use(fileUpload);
@@ -377,13 +379,22 @@ app.get('/somos', (req, res, next) => {
 // Blog
 app.get('/home/blog', (req, res, next) => {
 	if(req.session.user){
+		let posts;
+		req.getConnection((err, conn) => {
+			conn.query("SELECT * FROM post WHERE user_id = ?", req.session.userId, (err, data) => {
+				if(err)
+					res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
+				else{
+					posts = data;
+				}
+			});
+		});
 		req.getConnection((err, conn) => {
 			conn.query('SELECT id, name FROM category', (err, data) => {
 				if(err)
 					res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 				else{
-					//console.log(data)
-					res.render('blog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: data});
+					res.render('blog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: data, posts});
 				}
 			});
 		});

@@ -6,6 +6,30 @@ block content
         a.dashboard-profile__user-link.table-header-button(href="#", id="openPopupAddPost")
             i.fa-solid.fa-user-plus
             | Agregar un post
+
+    div.blog-posts-container
+        each post in posts
+            div.blog-posts-post
+                p.blog-posts-post__title= post.title
+                p.blog-posts-post__short #{post.brief.substr(1, 200)}...
+                div.blog-posts-post-control
+                    if(post.status == 0)
+                        span.blog-posts-post__tag
+                            i.fas.fa-tags
+                            | Publicado
+                    else
+                        span.blog-posts-post__tag
+                            i.fas.fa-tags
+                            | No Publicado
+                    div.blog-posts-post-control_btns
+                        a.blog-posts-post__see(href="#")
+                            i.far.fa-eye
+                        a.blog-posts-post__edit(href="#")
+                            i.far.fa-edit
+                        a.blog-posts-post__delete(href="#")
+                            i.fas.fa-trash
+
+
     div#popUp-post.overlay.closeWindowUser
         div.popUp-user
             include newPost.pug
