@@ -28,6 +28,7 @@
     "pug": "^3.0.2",
     "req-flash": "^0.0.3",
     "serve-favicon": "^2.5.0",
+    "uuid": "^9.0.1",
     "webp-converter": "^2.3.3"
   },
   "devDependencies": {

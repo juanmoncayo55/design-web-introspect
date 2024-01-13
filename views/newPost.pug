@@ -1,0 +1,25 @@
+h4.read-articles__title.addPost-title Agregar una nueva Publicación
+form.formulario.signup-formulario.formulario-addPost(method="POST", id="form-add-post")
+    input(type="hidden", name="idUser", id="id_user_publish", value=userLogued.id)
+    .campo
+        input.campo__input(type='text', name="title_txt", placeholder="Título del Post", id="title", autocomplete='off', required)
+    .campo
+        textarea(name="brief_txt", placeholder="Resumen del post", id="brief", required)
+    .campo
+        textarea.content-textarea(name="content_txt", placeholder="Contenido del post", id="content", required)
+    .campo
+        input.formulario-addUser__btnUploadImage(type='file', name="image_post", id="image-post")
+    .campo.campo-status
+        div.formulario-addPost__radio.mb1-5
+            input(type="radio", name="status", value="0", id="publicado")
+            label(for="publicado") Publicado
+        div.formulario-addPost__radio
+            input(type="radio", name="status", value="1", id="no_publicado")
+            label(for="no_publicado") No publicado
+    .select-category
+        select.fline-height(name="category_slc", id="category", required)
+            option ---- Categoría ----
+            each category in categories
+                option(value=category.id)= category.name
+    input.boton.formulario__send(type='submit' value='Enviar Formulario')
+    a#closePopUpUserAdd.boton.closePopUpUserAddStyle(href="#") Cerrar

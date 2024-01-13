@@ -477,7 +477,7 @@ img{max-width: 100%;}
 }
 .signup-formulario .campo, .login-formulario .campo{ margin-bottom: 1.8rem; }
 
-.signup-formulario .campo__input:focus, .login-formulario .campo__input:focus, .formulario-dashboard-userProfile .campo__input:focus{
+.signup-formulario .campo__input:focus, .login-formulario .campo__input:focus, .formulario-dashboard-userProfile .campo__input:focus, .formulario-addPost textarea:focus{
 	border: 3px solid var(--primario);
 }
 
@@ -839,7 +839,7 @@ img{max-width: 100%;}
 	border: 0;
 	border-bottom: 3px solid var(--primario);
 }
-.formulario-dashboard-userProfile select, .formulario-addUser .select-pais select{
+.formulario-dashboard-userProfile select, .formulario-addUser .select-pais select, .formulario-addPost .select-category select{
 	border: 3px solid rgb(229 71 75 / 21%);
     color: #616161;
     padding: 0.8rem 1.2rem;
@@ -851,13 +851,13 @@ img{max-width: 100%;}
     -moz-appearance: none;
     appearance: none;
 }
-.formulario-addUser .select-pais{margin-bottom: 1.8rem;}
-.select-pais{
+.formulario-addUser .select-pais, .formulario-addPost .select-category{margin-bottom: 1.8rem;}
+.select-pais, .formulario-addPost .select-category{
 	position: relative;
-	max-width: 28rem;
+	max-width: 32rem;
 	width: 100%;
 }
-.select-pais:after{
+.select-pais:after, .formulario-addPost .select-category:after{
 	content: '\f078';
     font-family: FontAwesome;
 	color: var(--primario);
@@ -873,7 +873,7 @@ img{max-width: 100%;}
     align-items: center;
     justify-content: center;
 }
-.select-pais select:focus{
+.select-pais select:focus, .formulario-addPost .select-category select:focus{
 	border-color: #e5474b;
     box-shadow: 0 0 0 1px #e5474b;
 }
@@ -939,7 +939,7 @@ img{max-width: 100%;}
 }
 .popUp-user{
 	width: 70rem;
-    max-width: 70%;
+    max-width: 90%;
     margin: 0 auto;
 	margin-top: 4rem;
     background-color: #FFF;
@@ -970,6 +970,7 @@ img{max-width: 100%;}
 }
 .overlay-success-container
 .addUser-title{margin-bottom: 2rem;}
+.overlay-error i{color: #e91e1e;}
 .closePopUpUserAddStyle{
 	background: #000;
     line-height: 1.4rem;
@@ -1175,4 +1176,68 @@ font-size: 2.6rem;
 	    width: 100%;
 	}
 	.somos-socialnetwork .somos-socialnetwork__text{margin-bottom: 0.5rem;}
+}
+/* Seccion de Agregar un Post */
+.addPost-title{margin-bottom: 3rem;}
+.formulario-addPost textarea{
+	width: 100%;
+    min-height: 90px;
+    resize: none;
+    outline: none;
+    border: 3px solid rgb(229 71 75 / 21%);
+    color: #616161;
+    padding: 1.2rem;
+    font-size: 1.8rem;
+}
+.formulario-addPost textarea.content-textarea{min-height: 250px;}
+
+
+/*Temporal*/
+.formulario-addPost__radio{
+	display: flex;
+    align-items: center;
+    line-height: 2.5rem;
+    position: relative;
+}
+.formulario-addPost__radio input[type="radio"]:before {
+	content: "";
+	display: inline-block;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 50%;
+	border: 2px solid var(--primario);
+	position: absolute;
+	top: 0;
+	vertical-align: middle;
+	cursor: pointer;
+}
+.formulario-addPost__radio input[type="radio"]{
+	height: 0;
+}
+.formulario-addPost__radio label{
+	padding-left: 2.5rem;
+    font-size: 2rem;
+    color: var(--grisTexto);
+	cursor:pointer;
+}
+.formulario-addPost__radio input[type="radio"]:checked::before {
+	background-color: var(--primario);
+    content: "\f00c";
+    font-family: FontAwesome;
+    color: #FFF;
+    font-size: 1.6rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.formulario-addPost__radio.mb1-5{margin-bottom: 1.5rem}
+@media (min-width: 650px){
+	.formulario-addPost .campo-status{
+		display: grid;
+	    grid-template-columns: 1fr 1fr;
+	    align-items: flex-start;
+	    line-height: normal;
+	}
+	.formulario-addPost__radio.mb1-5{margin-bottom: 0;}
 }

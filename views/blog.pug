@@ -1,0 +1,73 @@
+extends dashboard.pug
+
+block content
+    div.dashboard-profile__user-header
+        p.dashboard-profile__user-heading.table-title-heading= title
+        a.dashboard-profile__user-link.table-header-button(href="#", id="openPopupAddPost")
+            i.fa-solid.fa-user-plus
+            | Agregar un post
+    div#popUp-post.overlay.closeWindowUser
+        div.popUp-user
+            include newPost.pug
+
+    script.
+        const popUpUser = document.querySelector("#popUp-post"),
+            openPopupAddUser = document.querySelector("#openPopupAddPost"),
+            closePopupUser = document.querySelector("#closePopUpUserAdd"),
+            FormAddPost = document.querySelector("#form-add-post");
+
+        const successMessage = document.createElement("DIV");
+            successMessage.setAttribute('id', 'popSuccessUser');
+            successMessage.classList.add('overlay', 'overlay-success');
+        const spinner = document.createElement("DIV");
+            spinner.classList.add('.spinner-content');
+
+        spinner.innerHTML = `<div class="fa-3x"><i class=" fas fa-spinner fa-pulse"></i></div>`;
+        successMessage.innerHTML = "<div class='overlay-success-container'><i class='fa-solid fa-check-double'></i><span>Publicación agregada con exito</span></div>";
+
+        closePopupUser.addEventListener("click", function(e){
+            e.preventDefault();
+            popUpUser.classList.toggle("closeWindowUser");
+        });
+        openPopupAddUser.addEventListener("click", function(e){
+            e.preventDefault();
+            popUpUser.classList.toggle("closeWindowUser");
+        });
+        FormAddPost.addEventListener("submit", function(e){
+            e.preventDefault();
+
+            FormAddPost.appendChild(spinner);
+
+            let date = new Date();
+            const formData = new FormData(FormAddPost);
+                formData.append('created_at', date.toISOString().slice(0, 19).replace('T', ' '));
+            fetch('/new-post', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(success => {
+                console.log(success);
+                if(success.message){
+                    spinner.remove();
+                    FormAddPost.appendChild(successMessage);
+                    setTimeout(function(){
+                        FormAddPost.reset();
+                        successMessage.remove()
+                        popUpUser.classList.toggle("closeWindowUser");
+                    }, 4000);
+                }else if(success.error){
+                    spinner.remove();
+                    successMessage.innerHTML = "<div class='overlay-success-container overlay-error'><i class='fas fa-exclamation-triangle'></i><span>No se pudo agregar la Publicación</span></div>";
+                    FormAddPost.appendChild(successMessage);
+                    setTimeout(function(){
+                        FormAddPost.reset();
+                        successMessage.remove()
+                        popUpUser.classList.toggle("closeWindowUser");
+                    }, 4000);
+                }
+            })
+            .catch(error => {
+                console.log("success error: ", error);
+            });
+        });

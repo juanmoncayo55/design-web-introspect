@@ -18,18 +18,18 @@ html(lang="es")
 				.logo
 					a.no-margin.logo__title(href='/') introspect
 				ul.dashboard-navigation
-					a.dashboard-navigation-link(href="#")
+					a.dashboard-navigation-link(href="/home/dashboard")
 						i.fa-solid.fa-house-chimney
-						| Home
+						| Inicio
 					a.dashboard-navigation-link(href="#")
 						i.fa-solid.fa-bars-progress
 						| Workflow
-					a.dashboard-navigation-link(href="#")
+					a.dashboard-navigation-link(href="/home/blog")
 						i.fa-solid.fa-chart-simple
-						| Stadistics
+						| Blog
 					a.dashboard-navigation-link(href="/home/users")
 						i.fa-solid.fa-user
-						| Users
+						| Usuarios
 					a.dashboard-navigation-link(href="#")
 						i.fa-solid.fa-calendar-days
 						| Calendar
@@ -70,6 +70,8 @@ html(lang="es")
 								p.username #{userLogued.user_name}
 								a(href="/home/profile").dashboard-panel__header-btn.username-btn Ver Perfil
 				div.dashboard-panel-content
+					if(home)
+						p Este sera el inicio del sitio
 					block content
 		script(src="/js/codigo.js")
 		script.

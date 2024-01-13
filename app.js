@@ -22,7 +22,7 @@ const express = require('express'),
 	conn = myConnection(mysql, dbOptions, 'request'),
 	path = require('path'),
 	cors = require('cors');
-
+const { v4: uuidv4 } = require('uuid');
 let app = express();
 
 //app.use(fileUpload);
@@ -184,7 +184,7 @@ app.get('/home/dashboard', (req, res, next) => {
 		console.log("Sesion en Login: ", req.session)
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM users WHERE id = ?", user[0].id, (err, data) => {
-				res.render('dashboard', {title: "Dashboard", user: data[0], userLogued: req.session.user[0]});
+				res.render('dashboard', {title: "Dashboard", user: data[0], userLogued: req.session.user[0], home: true});
 				console.log("Dashboard Correcto: ", data);
 			});
 		});
@@ -311,17 +311,6 @@ app.get('/home/delete-user/:id', (req, res, next) => {
 });
 // End - Delete user
 
-// Logout
-app.get('/home/logout', (req, res, next) => {
-	req.session.destroy(function(err) {
-		if(!err){
-			console.log(req.session);
-			res.redirect("/login");
-		}else console.log("Error destroy: ", err)
-   })
-});
-// End - Logout
-
 // Add User
 app.post('/user-add', (req, res, next) => {
 	//console.log(req.files)
@@ -383,6 +372,80 @@ app.get('/somos', (req, res, next) => {
 	res.render('somos', {title: "Quienes Somos - Introspect"})
 });
 // End - Páginas
+
+/****************--- DIRECCIONES PARA BLOG'S ---****************/
+// Blog
+app.get('/home/blog', (req, res, next) => {
+	if(req.session.user){
+		req.getConnection((err, conn) => {
+			conn.query('SELECT id, name FROM category', (err, data) => {
+				if(err)
+					res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
+				else{
+					//console.log(data)
+					res.render('blog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: data});
+				}
+			});
+		});
+	}else res.redirect('/login');
+});
+// End - Blog
+
+// Insert a new Post
+//app.get('/new-post', (req, res, next) => {});
+app.post('/new-post', (req, res, next) => {
+	req.getConnection((err, conn) => {
+		let photoPost, name_photo, uploadPath;
+		if(!req.files || Object.keys(req.files).length == 0){
+			return res.status(400).json({error: "Ningun archivo fue cargado."});
+		}
+
+		photoPost = req.files.image_post;
+		name_photo = `${uuidv4()}.webp`;
+		webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
+		uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
+
+		photoPost.mv(uploadPath, (err) => {
+			if (err)
+				  return res.status(500).json(err);
+			else{
+				req.getConnection((err, conn) =>{
+					let post = {
+						title: req.body.title_txt,
+						brief: req.body.brief_txt,
+						content: req.body.content_txt,
+						image: name_photo,
+						created_at: req.body.created_at,
+						status: req.body.status,
+						category_id: req.body.category_slc,
+						user_id: req.body.idUser
+					};
+					conn.query('INSERT INTO post SET ?', post, (err, data) => {
+						if(err)
+							res.status(500).json({error: "No se pudo insertar el post, hubo un error en la BD"});
+						else{
+							res.status(200).json({message: "Se ha insertado con exito el post"});
+						}
+					});
+				});
+			}
+		});
+	});
+});
+// End - Insert a new Post
+
+
+
+// Logout
+app.get('/home/logout', (req, res, next) => {
+	req.session.destroy(function(err) {
+		if(!err){
+			console.log(req.session);
+			res.redirect("/login");
+		}else console.log("Error destroy: ", err)
+   })
+});
+// End - Logout
 
 // Page Not Found (404)
 app.use((req, res, next) => {
