@@ -305,12 +305,28 @@ app.get('/home/edit-user/:id', (req, res, next) => {
 app.get('/home/delete-user/:id', (req, res, next) => {
 	req.getConnection((err, conn) => {
 		let id = req.params.id;
-		conn.query("DELETE FROM users WHERE id = ?", id, (err, data) => {
-			if(err)
-				return next( new Error('Registro no Encontrado') );
-			else
-				res.redirect('/home/users')
+		conn.query("SELECT imagen_avatar FROM users WHERE id = ?", id, (err, data) => {
+			if(!err){
+				//Asignando nombre de la imagen
+				let nameOfImage = data[0].imagen_avatar;
+				//Eliminando imagen del servidor(de la carpeta donde se almacenan las imagenes)
+				fs.unlink(`${__dirname}/public/images/dashboard/${nameOfImage}`, function(err){
+					if (err) {
+						console.error(err);
+					  } else {
+						console.log('File is deleted.');
+					  }
+				});
+				conn.query("DELETE FROM users WHERE id = ?", id, (err, data) => {
+					if(err)
+						return next( new Error('Registro no Encontrado') );
+					else
+						res.redirect('/home/users')
+				});
+			}else console.log(err)
 		});
+
+
 	});
 });
 // End - Delete user
@@ -397,7 +413,7 @@ app.get('/home/blog', (req, res, next) => {
 					res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 				else{
 
-					conn.query("SELECT * FROM post WHERE user_id = ?", req.session.userId, (err, posts) => {
+					conn.query("SELECT * FROM post WHERE user_id = ? ORDER BY id DESC", req.session.userId, (err, posts) => {
 						if(err)
 							res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 						else{

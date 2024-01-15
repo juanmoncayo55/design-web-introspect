@@ -7,34 +7,38 @@ block content
             a.dashboard-profile__user-link.table-header-button(href="#", id="openPopupAddUser")
                 i.fa-solid.fa-user-plus
                 | Agregar un usuario
-        table.table
-            thead
-                tr
-                    th Primer Nombre
-                    th Primer Apellido
-                    th Celular
-                    th Username
-                    th Correo
-                    th Pais
-                    th Cargo
-                    th
-                    th
-            tbody
-                each user in users
+        if(users.length)
+            table.table
+                thead
                     tr
-                        td(data-label="Primer Nombre") #{user.first_name}
-                        td(data-label="Primer Apellido") #{user.last_name}
-                        td(data-label="Celular") #{user.mob_no}
-                        td(data-label="Username") #{user.user_name}
-                        td(data-label="Correo") #{user.email}
-                        td(data-label="Pais") #{user.name_country}
-                        td(data-label="Cargo") #{user.area_working}
-                        td.centrar-text.table-data-action
-                            a.table-action(href=`/home/edit-user/${user.id}`, title="Editar")
-                                i.fa-regular.fa-pen-to-square
-                        td.centrar-text.table-data-action
-                            a.table-action.delete(href=`/home/delete-user/${user.id}`, title="Eliminar")
-                                i.fa-regular.fa-trash-can
+                        th Primer Nombre
+                        th Primer Apellido
+                        th Celular
+                        th Username
+                        th Correo
+                        th Pais
+                        th Cargo
+                        th
+                        th
+                tbody
+                    each user in users
+                        tr
+                            td(data-label="Primer Nombre") #{user.first_name}
+                            td(data-label="Primer Apellido") #{user.last_name}
+                            td(data-label="Celular") #{user.mob_no}
+                            td(data-label="Username") #{user.user_name}
+                            td(data-label="Correo") #{user.email}
+                            td(data-label="Pais") #{user.name_country}
+                            td(data-label="Cargo") #{user.area_working}
+                            td.centrar-text.table-data-action
+                                a.table-action(href=`/home/edit-user/${user.id}`, title="Editar")
+                                    i.fa-regular.fa-pen-to-square
+                            td.centrar-text.table-data-action
+                                a.table-action.delete(href=`/home/delete-user/${user.id}`, title="Eliminar")
+                                    i.fa-regular.fa-trash-can
+        else
+            div.error-no-show
+                p No hay una lista de usuarios que mostrar.
         div#popUp-user.overlay.closeWindowUser
             div.popUp-user
                 include addUser.pug
