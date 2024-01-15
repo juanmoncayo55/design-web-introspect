@@ -2,6 +2,8 @@
 
 const express = require('express'),
 	pug = require('pug'),
+	fs = require('fs'),
+	//path = require('path'),
 	bodyParser = require('body-parser'),
 	session = require('express-session'),
 	favicon = require('serve-favicon')(`${__dirname}/public/favicon.png`),
@@ -379,7 +381,7 @@ app.get('/somos', (req, res, next) => {
 // Blog
 app.get('/home/blog', (req, res, next) => {
 	if(req.session.user){
-		let posts;
+		/*let posts;
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM post WHERE user_id = ?", req.session.userId, (err, data) => {
 				if(err)
@@ -388,13 +390,21 @@ app.get('/home/blog', (req, res, next) => {
 					posts = data;
 				}
 			});
-		});
+		});*/
 		req.getConnection((err, conn) => {
-			conn.query('SELECT id, name FROM category', (err, data) => {
+			conn.query('SELECT id, name FROM category', (err, categories) => {
 				if(err)
 					res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 				else{
-					res.render('blog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: data, posts});
+
+					conn.query("SELECT * FROM post WHERE user_id = ?", req.session.userId, (err, posts) => {
+						if(err)
+							res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
+						else{
+							res.render('blog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: categories, posts: posts});
+						}
+					});
+
 				}
 			});
 		});
@@ -403,6 +413,7 @@ app.get('/home/blog', (req, res, next) => {
 // End - Blog
 
 // Insert a new Post
+
 //app.get('/new-post', (req, res, next) => {});
 app.post('/new-post', (req, res, next) => {
 	req.getConnection((err, conn) => {
@@ -445,7 +456,88 @@ app.post('/new-post', (req, res, next) => {
 });
 // End - Insert a new Post
 
+// View section edit post
+app.get('/home/edit-post/:id', (req, res, next) => {
+	if(req.session.user){
+		let idPost = req.params.id;
+		let categories;
 
+		req.getConnection((err, conn) => {
+			conn.query('SELECT id, name FROM category', (err, data) => {
+				if(err)
+					console.log("No se pudo traer las categorias, hubo un error en la BD", err);
+				else{
+					categories = data;
+				}
+			});
+		});
+
+		req.getConnection((err, conn) => {
+			//SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, post.user_id, users.first_name, users.last_name, users.imagen_avatar, category.name AS "categoria" FROM post INNER JOIN users ON post.user_id = users.id INNER JOIN category ON post.category_id = category.id  WHERE post.id = 1;
+			conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, post.user_id, users.first_name, users.last_name, users.email, users.user_name, users.imagen_avatar, category.name AS 'categoria' FROM post INNER JOIN users ON post.user_id = users.id INNER JOIN category ON post.category_id = category.id  WHERE post.id = ?", idPost, (err, data) => {
+				if(err)
+					res.status(500).json({error: "Hubo un error en la BD, vuelve a intentarlo mas tarde"});
+				else{
+					res.render('editPost', {title: "Editando Post de Blog", userLogued: req.session.user[0], post: data[0], categories});
+				}
+			});
+		});
+	}else res.redirect('/login');
+});
+// End - View section edit post
+
+// Edit post
+app.post('/edit-post', (req, res, next) => {
+	//console.log(req.body);
+	//console.log(req.files);
+	let photoPost, name_photo, uploadPath;
+	let postId = req.body.idPost;
+	let post = {
+		title: req.body.title_txt,
+		brief: req.body.brief_txt,
+		content: req.body.content_txt,
+		status: req.body.status,
+		category_id: req.body.category_slc
+	}
+	name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}.webp`;
+	req.getConnection((err, conn) =>{
+
+
+		if(req.files){
+			photoPost = req.files.image_post;
+			//name_photo = path.parse(req.body.name_image_post).name;
+			//name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}`;
+			name_photo = `${req.body.name_image_post}`;
+
+			const convertImageToWebp = webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
+
+			uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
+
+			photoPost.mv(uploadPath, (errorImage) => {
+				if (!errorImage){
+					console.log("Se subio la imagen")
+					/*conn.query("UPDATE post SET image = ? WHERE id = ?", [name_photo, postId], (error, data) => {
+						if(error)
+							res.status(502).json({error: "Error en la Base de Datos"});
+						else{
+							res.json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
+						}
+					});*/
+				}
+			});
+		}
+	});
+	req.getConnection((err, conn) => {
+		conn.query('UPDATE post SET ? WHERE id = ?', [{...post, image: name_photo}, postId], (err, data) => {
+			if(err)
+				res.status(500).json({error: "Hubo un error en la Base de Datos, vuelve a intentarlo ,ás tarde", err});
+			else{
+				res.json({success: "Se ha actualizado con exito el Post"});
+			}
+		});
+	});
+});
+// End - Edit post
 
 // Logout
 app.get('/home/logout', (req, res, next) => {

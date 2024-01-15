@@ -8,37 +8,49 @@ block content
             | Agregar un post
 
     div.blog-posts-container
-        each post in posts
-            div.blog-posts-post
-                p.blog-posts-post__title= post.title
-                p.blog-posts-post__short #{post.brief.substr(1, 200)}...
-                div.blog-posts-post-control
-                    if(post.status == 0)
-                        span.blog-posts-post__tag
-                            i.fas.fa-tags
-                            | Publicado
-                    else
-                        span.blog-posts-post__tag
-                            i.fas.fa-tags
-                            | No Publicado
-                    div.blog-posts-post-control_btns
-                        a.blog-posts-post__see(href="#")
-                            i.far.fa-eye
-                        a.blog-posts-post__edit(href="#")
-                            i.far.fa-edit
-                        a.blog-posts-post__delete(href="#")
-                            i.fas.fa-trash
+        if(posts.length)
+            each post in posts
+                div.blog-posts-post
+                    p.blog-posts-post__title= post.title
+                    p.blog-posts-post__short #{post.brief.substr(1, 200)}...
+                    div.blog-posts-post-control
+                        if(post.status == 0)
+                            span.blog-posts-post__tag
+                                i.fas.fa-tags
+                                | Publicado
+                        else
+                            span.blog-posts-post__tag
+                                i.fas.fa-tags
+                                | No Publicado
+                        div.blog-posts-post-control_btns
+                            a.blog-posts-post__see(href="#", data-id=`${post.id}`, onclick="openModalUserFN(event);", data-post=post)
+                                i.far.fa-eye
+                            a.blog-posts-post__edit(href=`/home/edit-post/${post.id}`)
+                                i.far.fa-edit
+                            a.blog-posts-post__delete(href="#")
+                                i.fas.fa-trash
+        else
+            div.not-posts No hay Publicaciones que mostrar
 
 
-    div#popUp-post.overlay.closeWindowUser
-        div.popUp-user
-            include newPost.pug
+        div#popUp-post.overlay.closeWindowUser
+            div.popUp-user
+                include newPost.pug
+
+        div#modalSeePost.overlay.closeWindowPost
+            div#contentWindowPost.closeWindowPost-content
+                article.post-read
+                a#closeModalSeePost.boton.closePopUpViewPost(href="#")
+                    i.fas.fa-times
 
     script.
         const popUpUser = document.querySelector("#popUp-post"),
             openPopupAddUser = document.querySelector("#openPopupAddPost"),
             closePopupUser = document.querySelector("#closePopUpUserAdd"),
-            FormAddPost = document.querySelector("#form-add-post");
+            FormAddPost = document.querySelector("#form-add-post"),
+            closeModalSeePost = document.querySelector("#closeModalSeePost"),
+            modalSeePost = document.querySelector("#modalSeePost"),
+            contentWindowPost = document.querySelector("#contentWindowPost");
 
         const successMessage = document.createElement("DIV");
             successMessage.setAttribute('id', 'popSuccessUser');
@@ -49,6 +61,24 @@ block content
         spinner.innerHTML = `<div class="fa-3x"><i class=" fas fa-spinner fa-pulse"></i></div>`;
         successMessage.innerHTML = "<div class='overlay-success-container'><i class='fa-solid fa-check-double'></i><span>Publicación agregada con exito</span></div>";
 
+
+        function openModalUserFN(e){
+            e.preventDefault();
+            modalSeePost.classList.toggle("closeWindowPost");
+            document.body.style.overflow = "hidden";
+            //Almaceno el post y lo convierto a objeto JS
+            let post = JSON.parse(e.target.parentElement.dataset.post);
+            console.log(post);
+            document.querySelector(".post-read").innerHTML = `<p class="post-read__title">${post.title}</p>
+                    <img src=/images/dashboard/post/${post.image} class="post-read__image" />
+                    <p class="post-read__date">${post.created_at}</p>
+                    <p class="post-read__content">${post.content}</p>
+                    <div class="post-read__bar">
+                        <p class="post-read__bar-category">Desarrollo Web</p>
+                        <p class="post-read__bar-publish">Publicado</p>
+                    </div>`;
+        }
+
         closePopupUser.addEventListener("click", function(e){
             e.preventDefault();
             popUpUser.classList.toggle("closeWindowUser");
@@ -57,6 +87,16 @@ block content
             e.preventDefault();
             popUpUser.classList.toggle("closeWindowUser");
         });
+
+
+        closeModalSeePost.addEventListener("click", function(e){
+            e.preventDefault();
+            modalSeePost.classList.toggle("closeWindowPost");
+            document.body.style.overflow = "auto";
+        });
+        
+
+
         FormAddPost.addEventListener("submit", function(e){
             e.preventDefault();
 
