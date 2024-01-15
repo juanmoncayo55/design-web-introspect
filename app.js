@@ -539,6 +539,40 @@ app.post('/edit-post', (req, res, next) => {
 });
 // End - Edit post
 
+// Delete Post of blog
+app.get('/home/delete-post/:id', (req, res, next) => {
+	req.getConnection((err, conn) => {
+		let id = req.params.id;
+		conn.query("SELECT image FROM post WHERE id = ?", id, (err, data) => {
+			if(!err){
+				//Asignando nombre de la imagen
+				let nameOfImage = data[0].image;
+				//Eliminando imagen del servidor(de la carpeta donde se almacenan las imagenes)
+				fs.unlink(`${__dirname}/public/images/dashboard/post/${nameOfImage}`, function(err){
+					if (err) {
+					    console.error(err);
+					  } else {
+					    console.log('File is deleted.');
+					  }
+				});
+				conn.query("DELETE FROM post WHERE id = ?", id, (err, data) => {
+					if(err)
+						return next( new Error('Registro no Encontrado') );
+					else
+						res.redirect('/home/blog')
+				});
+			}
+		});
+		/*conn.query("DELETE FROM post WHERE id = ?", id, (err, data) => {
+			if(err)
+				return next( new Error('Registro no Encontrado') );
+			else
+				res.redirect('/home/blog')
+		});*/
+	});
+});
+// End - Delete Post of blog
+
 // Logout
 app.get('/home/logout', (req, res, next) => {
 	req.session.destroy(function(err) {
