@@ -199,7 +199,7 @@ app.get('/home/admin-site', (req, res, next) => {
 		res.render('editSitePage', {title: "Sección para editar Landing Page", userLogued: req.session.user[0]});
 	}else res.redirect('/login')
 });
-app.get('/home/somos-edit-information', (req, res, next) => {
+app.get('/home/admin-site/somos-edit-information', (req, res, next) => {
 	if(req.session.user){
 		jsonfile.readFile(urlFileSomos, function (err, obj) {
 			if (err) console.error(err)
@@ -215,17 +215,17 @@ app.post('/somos-information-edit', (req, res, next) => {
 		else console.error(err)
 	})
 });
-app.get('/home/administrator-users', (req, res, next) => {
+app.get('/home/admin-site/administrator-users', (req, res, next) => {
 	if(req.session.user){
 		res.render('administratorUsers', {title: "Administrando usuarios", userLogued: req.session.user[0]});
 	}else res.redirect('/login')
 });
-app.get('/home/administrator-post', (req, res, next) => {
+app.get('/home/admin-site/administrator-post', (req, res, next) => {
 	if(req.session.user){
 		res.render('administratorPost', {title: "Administrando publicaciones", userLogued: req.session.user[0]});
 	}else res.redirect('/login')
 });
-app.get('/home/administrator-email', (req, res, next) => {
+app.get('/home/admin-site/administrator-email', (req, res, next) => {
 	if(req.session.user){
 		res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0]});
 	}else res.redirect('/login')
