@@ -1,0 +1,78 @@
+extends dashboard.pug
+
+block content
+    section.edit-somos-section
+        div.message-for-edit
+            p Para editar la sección has Click!!! en la imagen (Se desplegará una caja de texto).
+        form#formularioEditSomos.formulario-edit-somos
+            a(href="#textarea1", id="som1-show-content")
+                img(src="/images/somos-frontpage-1.png")
+            div#textarea1
+                textarea.message-edit-textarea.hide-edit-textarea(name="text1", id="text1-somos-frontpage", placeholder="Escribir texto para seccion de Texto 1...", required) #{content.text1}
+            a(href="#textarea2", id="som2-show-content")
+                img(src="/images/somos-frontpage-2.png")
+            div#textarea2
+                textarea.message-edit-textarea.hide-edit-textarea(name="text2", id="text2-somos-frontpage", placeholder="Escribir texto para seccion de Texto 2...", required) #{content.text2}
+            a(href="#textarea3", id="som3-show-content")
+                img(src="/images/somos-frontpage-3.png")
+            div#textarea3
+                textarea.message-edit-textarea.hide-edit-textarea(name="text3", id="text3-somos-frontpage", placeholder="Escribir texto para seccion de Texto 3...", required) #{content.text3}
+            a(href="#textarea4", id="som4-show-content")
+                img(src="/images/somos-frontpage-4.png")
+            div#textarea4
+                textarea.message-edit-textarea.hide-edit-textarea(name="text4", id="text4-somos-frontpage", placeholder="Escribir texto para seccion de Texto 4...", required) #{content.text4}
+                textarea.message-edit-textarea.hide-edit-textarea(name="text5", id="text5-somos-frontpage", placeholder="Escribir texto para seccion de Texto 5...", required) #{content.text5}
+            div.edit-somos-button_content
+                input.boton.boton--secundario(type="submit", value="Enviar cambios para Somos.", name="btn-send-data-somos")
+        div#message-response-overlay.overlay.closeOverlayMessageSomos
+            div#message-reOverlay.message-response-overlay
+
+        script.
+            const objectContentPropertysForInput = [
+                    {button: "som1-show-content", textArea: "text1-somos-frontpage"},
+                    {button: "som2-show-content", textArea: "text2-somos-frontpage"},
+                    {button: "som3-show-content", textArea: "text3-somos-frontpage"},
+                    {button: "som4-show-content", textArea: "text4-somos-frontpage"}
+                ],
+                formularioEditSomos = document.querySelector("#formularioEditSomos"),
+                messageResponse = document.querySelector("#message-response-overlay"),
+                //A este le agrego el contenido
+                messageReOverlay = document.querySelector("#message-reOverlay"),
+                divMeRe = document.createElement("DIV");
+
+            divMeRe.classList.add("message-response");
+            divMeRe.innerHTML = "<p>Se edito Correctamente el contenido de Somos</p>";
+            objectContentPropertysForInput.forEach(function(property){
+                document.querySelector(`#${property.button}`).addEventListener("click", function(e){
+                    //e.preventDefault();
+                    document.querySelector(`#${property.textArea}`).classList.toggle("hide-edit-textarea")
+                    document.querySelector(`#${property.textArea}`).focus()
+                    if(!document.querySelector("#text4-somos-frontpage").classList.contains("hide-edit-textarea")){
+                        document.querySelector("#text5-somos-frontpage").classList.remove("hide-edit-textarea");
+                    }else{
+                        document.querySelector("#text5-somos-frontpage").classList.add("hide-edit-textarea");
+                    }
+                });
+            });
+            formularioEditSomos.addEventListener("submit", function(e){
+                e.preventDefault();
+
+                
+
+                const formData = new FormData(formularioEditSomos);
+                fetch('/somos-information-edit', {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(success => success.json())
+                    .then(data => {
+                        console.log(data)
+                        messageReOverlay.appendChild(divMeRe);
+                        messageResponse.classList.remove("closeOverlayMessageSomos");
+                        setTimeout(function(){
+                            divMeRe.remove();
+                            messageResponse.classList.add("closeOverlayMessageSomos");
+                        }, 3500);
+                    })
+                    .catch(err => console.log("Error: ", err));
+            });

@@ -3,7 +3,6 @@
 const express = require('express'),
 	pug = require('pug'),
 	fs = require('fs'),
-	//path = require('path'),
 	bodyParser = require('body-parser'),
 	session = require('express-session'),
 	favicon = require('serve-favicon')(`${__dirname}/public/favicon.png`),
@@ -23,7 +22,8 @@ const express = require('express'),
 	},
 	conn = myConnection(mysql, dbOptions, 'request'),
 	path = require('path'),
-	cors = require('cors');
+	cors = require('cors'),
+	jsonfile = require('jsonfile');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -59,12 +59,27 @@ app.use(session({
 
 webp.grant_permission();
 
+//Llamando nuestro archivo con los textos de 'Somos'
+const urlFileSomos = `${__dirname}/textSomos.json`;
+
+/****************--- DIRECCIONES PARA Pàginas de LadingPage ---****************/
 // Index(Home)
 app.get('/', (req, res, next) => {
 	res.render('index', {title: "Introspect"});
 });
 // End - Index(Home)
+// Páginas
+app.get('/somos', (req, res, next) => {
+	jsonfile.readFile(urlFileSomos, function (err, obj) {
+		if (err) console.error(err)
+		else{
+			res.render('somos', {title: "Quienes Somos - Introspect", obj})
+		}
+	})
+});
+// End - Páginas
 
+/****************--- DIRECCIONES PARA LOGIN & LOGOUT ---****************/
 // Signup
 app.get('/signup', (req, res, next) => {
 	(req.session.user)
@@ -177,6 +192,45 @@ app.post('/login', (req, res, next) => {
 });
 // End - Login
 
+
+/****************--- DIRECCIONES PARA (DASHBOARD) ---****************/
+app.get('/home/admin-site', (req, res, next) => {
+	if(req.session.user){
+		res.render('editSitePage', {title: "Sección para editar Landing Page", userLogued: req.session.user[0]});
+	}else res.redirect('/login')
+});
+app.get('/home/somos-edit-information', (req, res, next) => {
+	if(req.session.user){
+		jsonfile.readFile(urlFileSomos, function (err, obj) {
+			if (err) console.error(err)
+			else{
+				res.render('sectionEditSomos', {title: "Editando Página de Somos", userLogued: req.session.user[0], content: obj});
+			}
+		})
+	}else res.redirect('/login')
+});
+app.post('/somos-information-edit', (req, res, next) => {
+	jsonfile.writeFile(urlFileSomos, req.body, function (err) {
+		if (!err) res.status(200).json({message: "Se edito correctamente el contenido."})
+		else console.error(err)
+	})
+});
+app.get('/home/administrator-users', (req, res, next) => {
+	if(req.session.user){
+		res.render('administratorUsers', {title: "Administrando usuarios", userLogued: req.session.user[0]});
+	}else res.redirect('/login')
+});
+app.get('/home/administrator-post', (req, res, next) => {
+	if(req.session.user){
+		res.render('administratorPost', {title: "Administrando publicaciones", userLogued: req.session.user[0]});
+	}else res.redirect('/login')
+});
+app.get('/home/administrator-email', (req, res, next) => {
+	if(req.session.user){
+		res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0]});
+	}else res.redirect('/login')
+});
+/****************--- DIRECCIONES PARA Users (DASHBOARD) ---****************/
 // Dashboard
 app.get('/home/dashboard', (req, res, next) => {
 	let userId = req.session.userId,
@@ -387,13 +441,7 @@ app.post('/user-add', (req, res, next) => {
 });
 // End - Add User
 
-// Páginas
-app.get('/somos', (req, res, next) => {
-	res.render('somos', {title: "Quienes Somos - Introspect"})
-});
-// End - Páginas
-
-/****************--- DIRECCIONES PARA BLOG'S ---****************/
+/****************--- DIRECCIONES PARA BLOG'S (DASHBOARD) ---****************/
 // Blog
 app.get('/home/blog', (req, res, next) => {
 	if(req.session.user){

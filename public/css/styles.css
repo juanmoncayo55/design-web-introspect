@@ -11,6 +11,12 @@
 }
 html {
 	font-size: 62.5%; /* 1rem = 10px */
+	scroll-behavior: smooth;
+}
+@media screen and (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
 }
 *, *:after, *:before{
 	box-sizing: border-box;
@@ -294,12 +300,16 @@ img{max-width: 100%;}
 	font-weight: bold;
 	padding: 1rem 3rem;
 	display: inline-block;
+	transition: .3s all ease-in-out;
+	cursor: pointer;
 }
 .boton--secundario{
 	border: 2px solid var(--primario);
 	color: var(--primario);
 }
-
+.boton--secundario:hover {
+    background-color: #e5474b30;
+}
 /** Entrada **/
 .entrada{
 	padding: 10rem 0;
@@ -525,10 +535,9 @@ img{max-width: 100%;}
 }
 .login-content{
 	max-width: 42rem;
-    margin: 0 auto;
+    margin: 4rem auto;
     width: 100%;
     text-align: center;
-    margin-top: 4rem;
     padding: 2rem;
     background-color: var(--grisOscuro);
     border-radius: 5rem 0;
@@ -1081,7 +1090,7 @@ border-bottom: none;
     padding: 1.5rem 3rem;
 	transition: .3s opacity ease-in-out;
 }
-.closeWindowUser, .closeWindowPost{display:none;}
+.closeWindowUser, .closeWindowPost, .closeOverlayMessageSomos{display:none;}
 
 /* Somos */
 .somos-title-text{
@@ -1452,4 +1461,116 @@ font-size: 2.6rem;
 	    line-height: normal;
 	}
 	.formulario-addPost__radio.mb1-5{margin-bottom: 0;}
+}
+/* Seccion de editar sitio del dashboard */
+.editPage-button{
+	border: 0;
+    color: white;
+    padding: 3rem 1.5rem;
+    border-radius: 1rem;
+    width: 100%;
+    font-size: 2.5rem;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+	transition: .3s all ease-in-out;
+    margin-bottom: 1.5rem
+}
+.editPage-button:after {
+    font-family: 'FontAwesome';
+    position: absolute;
+    color: #ffffff75;
+    top: 0;
+    right: 2%;
+    font-size: 7rem;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.editPage-button:hover{background-image: linear-gradient(45deg, #2121214f, #2121214f);}
+.editPage-button:active{background-image: linear-gradient(45deg, transparent, transparent);transform: scale(1.03);}
+
+.editPage-button__somos{background-color: var(--primario);}
+.editPage-button__somos:after {content: "\f0c0";}
+
+.editPage-button__users{background-color: #2196F3;}
+.editPage-button__users:after {content: "\f007";}
+
+.editPage-button__posts{background-color: #FF9800;}
+.editPage-button__posts:after{content: "\f1ea";}
+
+.editPage-button__emails{background-color: #8BC34A;}
+.editPage-button__emails:after{content: "\f0e0";}
+@media (max-width: 420px){
+	.editPage-button{
+		text-align: center;
+		font-size: 2rem;
+	    padding: 2rem 1.5rem;
+	}
+	.editPage-button:after {
+	    content: none;
+	}
+}
+/* Editando seccion de Somos */
+.edit-somos-section{
+	text-align: center;
+}
+section.edit-somos-section a img {display: block;transition: .5s all ease-in-out;width: 100%;}
+.edit-somos-section a{
+	display:block;
+	width: 70%;
+	margin: 0 auto;
+	margin-bottom: 2rem;
+    box-shadow: 0px 0px 3px #21212157;
+}
+.edit-somos-section a:hover img{opacity: .65;transform: scale(1.05);}
+.message-edit-textarea, .message-for-edit{
+	width: 70%;
+	margin: 0 auto;
+}
+.message-for-edit{
+	background-color: #5584ff;
+    color: #FFF;
+    font-size: 1.6rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 4rem;
+	border-radius: 1rem 0 1rem 0;
+}
+.message-edit-textarea{
+	resize: none;
+	color: var(--grisTexto);
+    outline: none;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+    padding: 1rem;
+    font-size: 1.9rem;
+    height: 20rem;
+    box-shadow: 0px 0px 3px #5584ff69;
+	transition: .5s height ease-in-out;
+}
+.hide-edit-textarea{
+	transition: .5s all ease-in-out;
+	transform: scaleY(0);
+	transform-origin: top;
+    height: 0;
+}
+.message-response-overlay{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.message-response{
+	width: 80%;
+    max-width: 70rem;
+    background: #FFF;
+    padding: 1rem;
+    margin: auto auto;
+	color: #4CAF50;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+@media (max-width: 980px){
+	.edit-somos-section a, .message-edit-textarea, .message-for-edit {width: 90%;}
 }

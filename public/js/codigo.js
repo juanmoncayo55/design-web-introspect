@@ -8,6 +8,8 @@
     let pathName = window.location.pathname;
     if(pathName === '/home/dashboard'){
         document.querySelector(".dashboard-navigation-link:nth-child(1)").classList.add("dashboard-navigation-link-active");
+    }else if(pathName === '/home/admin-site'){
+        document.querySelector(".dashboard-navigation-link:nth-child(2)").classList.add("dashboard-navigation-link-active");
     }else if(pathName === '/home/blog'){
         document.querySelector(".dashboard-navigation-link:nth-child(3)").classList.add("dashboard-navigation-link-active");
     }else if(pathName === '/home/users'){
