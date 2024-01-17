@@ -835,8 +835,12 @@ img{max-width: 100%;}
     font-size: 1.5rem;
 	transition: 0.3s all ease-in-out;
 	opacity: 0;
-	transform: translateY(-100px);
-	z-index: -17;
+	transform: translateY(-200%);
+}
+.dashboard-panel__header-user-link:focus + .dashboard-panel__header-user-menu {
+    opacity: 1;
+    transform: translateY(0px);
+    z-index: 0;
 }
 .showPanMenu{opacity: 1; transform: translateY(0);z-index: 1;}
 .dashboard-panel__header-user-menu .username{
@@ -849,7 +853,6 @@ img{max-width: 100%;}
     display: block;
     margin-top: 1.5rem;
 }
-
 .dashboard-panel-content{
 	margin: 1.5rem auto;
 	width: 95%;
@@ -1134,6 +1137,7 @@ border-bottom: none;
     left: 0;
     right: 0;
     background-color: #212121ad;
+    z-index: 1;
 }
 .popUp-user, .closeWindowPost-content{
 	width: 70rem;
