@@ -77,6 +77,14 @@ app.get('/somos', (req, res, next) => {
 		}
 	})
 });
+
+app.get('/blog', (req, res, next) => {
+	res.render('blog', {title: "Sección de Blog - Introspect"});
+});
+
+app.get('/contactanos', (req, res, next) => {
+	res.render('contactanos', {title: "Contactanos - Introspect"});
+});
 // End - Páginas
 
 /****************--- DIRECCIONES PARA LOGIN & LOGOUT ---****************/
@@ -443,7 +451,7 @@ app.post('/user-add', (req, res, next) => {
 
 /****************--- DIRECCIONES PARA BLOG'S (DASHBOARD) ---****************/
 // Blog
-app.get('/home/blog', (req, res, next) => {
+app.get('/home/adminBlog', (req, res, next) => {
 	if(req.session.user){
 		/*let posts;
 		req.getConnection((err, conn) => {
@@ -465,7 +473,7 @@ app.get('/home/blog', (req, res, next) => {
 						if(err)
 							res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 						else{
-							res.render('blog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: categories, posts: posts});
+							res.render('adminBlog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: categories, posts: posts});
 						}
 					});
 
@@ -623,7 +631,7 @@ app.get('/home/delete-post/:id', (req, res, next) => {
 					if(err)
 						return next( new Error('Registro no Encontrado') );
 					else
-						res.redirect('/home/blog')
+						res.redirect('/home/adminBlog')
 				});
 			}
 		});

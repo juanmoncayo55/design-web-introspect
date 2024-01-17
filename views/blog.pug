@@ -1,137 +1,28 @@
-extends dashboard.pug
-
+extends layout.pug
 block content
-    div.dashboard-profile__user-header
-        p.dashboard-profile__user-heading.table-title-heading= title
-        a.dashboard-profile__user-link.table-header-button(href="#", id="openPopupAddPost")
-            i.fa-solid.fa-user-plus
-            | Agregar un post
-
-    div.blog-posts-container
-        if(posts.length)
-            each post in posts
-                div.blog-posts-post
-                    p.blog-posts-post__title= post.title
-                    p.blog-posts-post__short #{post.brief.substr(1, 200)}...
-                    div.blog-posts-post-control
-                        if(post.status == 0)
-                            span.blog-posts-post__tag
-                                i.fas.fa-tags
-                                | Publicado
-                        else
-                            span.blog-posts-post__tag
-                                i.fas.fa-tags
-                                | No Publicado
-                        div.blog-posts-post-control_btns
-                            a.blog-posts-post__see(href="#", data-id=`${post.id}`, onclick="openModalUserFN(event);", data-post=post)
-                                i.far.fa-eye
-                            a.blog-posts-post__edit(href=`/home/edit-post/${post.id}`)
-                                i.far.fa-edit
-                            a.blog-posts-post__delete(href=`/home/delete-post/${post.id}`)
-                                i.fas.fa-trash
-        else
-            div.not-posts No hay Publicaciones que mostrar
-
-
-        div#popUp-post.overlay.closeWindowUser
-            div.popUp-user
-                include newPost.pug
-
-        div#modalSeePost.overlay.closeWindowPost
-            div#contentWindowPost.closeWindowPost-content
-                article.post-read
-                a#closeModalSeePost.boton.closePopUpViewPost(href="#")
-                    i.fas.fa-times
-
-    script.
-        const popUpUser = document.querySelector("#popUp-post"),
-            openPopupAddUser = document.querySelector("#openPopupAddPost"),
-            closePopupUser = document.querySelector("#closePopUpUserAdd"),
-            FormAddPost = document.querySelector("#form-add-post"),
-            closeModalSeePost = document.querySelector("#closeModalSeePost"),
-            modalSeePost = document.querySelector("#modalSeePost"),
-            contentWindowPost = document.querySelector("#contentWindowPost");
-
-        const successMessage = document.createElement("DIV");
-            successMessage.setAttribute('id', 'popSuccessUser');
-            successMessage.classList.add('overlay', 'overlay-success');
-        const spinner = document.createElement("DIV");
-            spinner.classList.add('.spinner-content');
-
-        spinner.innerHTML = `<div class="fa-3x"><i class=" fas fa-spinner fa-pulse"></i></div>`;
-        successMessage.innerHTML = "<div class='overlay-success-container'><i class='fa-solid fa-check-double'></i><span>Publicación agregada con exito</span></div>";
-
-
-        function openModalUserFN(e){
-            e.preventDefault();
-            modalSeePost.classList.toggle("closeWindowPost");
-            document.body.style.overflow = "hidden";
-            //Almaceno el post y lo convierto a objeto JS
-            let post = JSON.parse(e.target.parentElement.dataset.post);
-            console.log(post);
-            document.querySelector(".post-read").innerHTML = `<p class="post-read__title">${post.title}</p>
-                    <img src=/images/dashboard/post/${post.image} class="post-read__image" />
-                    <p class="post-read__date">${post.created_at}</p>
-                    <p class="post-read__content">${post.content}</p>
-                    <div class="post-read__bar">
-                        <p class="post-read__bar-category">Desarrollo Web</p>
-                        <p class="post-read__bar-publish">Publicado</p>
-                    </div>`;
-        }
-
-        closePopupUser.addEventListener("click", function(e){
-            e.preventDefault();
-            popUpUser.classList.toggle("closeWindowUser");
-        });
-        openPopupAddUser.addEventListener("click", function(e){
-            e.preventDefault();
-            popUpUser.classList.toggle("closeWindowUser");
-        });
-
-
-        closeModalSeePost.addEventListener("click", function(e){
-            e.preventDefault();
-            modalSeePost.classList.toggle("closeWindowPost");
-            document.body.style.overflow = "auto";
-        });
-        
-
-
-        FormAddPost.addEventListener("submit", function(e){
-            e.preventDefault();
-
-            FormAddPost.appendChild(spinner);
-
-            let date = new Date();
-            const formData = new FormData(FormAddPost);
-                formData.append('created_at', date.toISOString().slice(0, 19).replace('T', ' '));
-            fetch('/new-post', {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(success => {
-                console.log(success);
-                if(success.message){
-                    spinner.remove();
-                    FormAddPost.appendChild(successMessage);
-                    setTimeout(function(){
-                        FormAddPost.reset();
-                        successMessage.remove()
-                        popUpUser.classList.toggle("closeWindowUser");
-                    }, 4000);
-                }else if(success.error){
-                    spinner.remove();
-                    successMessage.innerHTML = "<div class='overlay-success-container overlay-error'><i class='fas fa-exclamation-triangle'></i><span>No se pudo agregar la Publicación</span></div>";
-                    FormAddPost.appendChild(successMessage);
-                    setTimeout(function(){
-                        FormAddPost.reset();
-                        successMessage.remove()
-                        popUpUser.classList.toggle("closeWindowUser");
-                    }, 4000);
-                }
-            })
-            .catch(error => {
-                console.log("success error: ", error);
-            });
-        });
+    - var text = 'Multos fabulas ubi eruditionem, nulla eiusmod occaecat. Consequat ea quem. Ita an voluptatibus te tamen de ingeniis, fore adipisicing mandaremus quid nostrud ita aut commodo firmissimum, et fugiat coniunctione o admodum a ipsum possumus, nescius o velit ex malis nescius sed ullamco. Mentitum summis senserit, quo minim deserunt in offendit familiaritatem ab cupidatat ita summis probant illustriora.Quamquam esse qui quamquam reprehenderit id quid aliquip philosophari. In multos quibusdam, eram efflorescere doctrina noster admodum ea  probant malis fugiat laborum labore se fabulas praetermissum ad excepteur. Aut nisi dolor tamen arbitror.'
+    section.contenedor
+        div.blog-contenedor
+            each post in [1,2,3,4,5]
+                article.blog-item__presentation
+                    img.blog-item__presentation-graphic(src="/images/pic01.jpg")
+                    div.blog-item__presentation-content
+                        a.fline-height.blog-item__presentation-title(href="#") Receta 1
+                        p.fline-height.blog-item__presentation-publisher JMMoriones
+                        p.blog-item__presentation-description= text.substr(0,400) + '...'
+                        div.blog-item__presentation-manegePost
+                            p.fline-height.blog-item__presentation-hour-publish 2 days, 8 hours
+                            p.fline-height.blog-item__presentation-comments 2 comments
+                            div.blog-item__presentation-ranking
+                                i.fas.fa-star
+                                i.fas.fa-star
+                                i.fas.fa-star
+                                i.fas.fa-star
+                                i.far.fa-star
+                            div.blog-item__presentation-socialnetwork
+                                a(href='#')
+                                    i.fab.fa-facebook-f
+                                a(href='#')
+                                    i.fab.fa-twitter
+                                a(href='#')
+                                    i.fab.fa-google-plus

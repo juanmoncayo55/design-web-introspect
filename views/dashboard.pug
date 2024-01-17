@@ -49,7 +49,7 @@ html(lang="es")
 					a.dashboard-navigation-link(href="/home/admin-site")
 						i.fa-solid.fa-bars-progress
 						| Editar Sitio
-					a.dashboard-navigation-link(href="/home/blog")
+					a.dashboard-navigation-link(href="/home/adminBlog")
 						i.fa-solid.fa-chart-simple
 						| Blog
 					a.dashboard-navigation-link(href="/home/users")
@@ -96,7 +96,7 @@ html(lang="es")
 						p Este sera el inicio del sitio
 					block content
 		script(src="/js/codigo.js")
-		//- script.
+		script.
 			(function(c, d){
 				const userR = d.querySelector("#user-r"),
 					panelUserMenu = d.querySelector(".dashboard-panel__header-user-menu"),

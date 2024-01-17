@@ -1,6 +1,13 @@
 extends dashboard.pug
 
 block content
+    nav.breadcrumb-nav
+        ol.breadcrumb
+            li.breadcrumb-item
+                a(href="/home/dashboard") Home
+            li.breadcrumb-item
+                a(href="/home/admin-site") Editar Sitio
+            li.breadcrumb-item.active(aria-current="page") Editando página de Somos
     section.edit-somos-section
         div.message-for-edit
             p Para editar la sección has Click!!! en la imagen (Se desplegará una caja de texto).
