@@ -11,7 +11,7 @@ block content
                         p.fline-height.blog-item__presentation-publisher By: #{post.nombre_usuario}
                         p.blog-item__presentation-description= post.content.substr(0,400) + '...'
                         div.blog-item__presentation-manegePost
-                            p.fline-height.blog-item__presentation-hour-publish 2 days, 8 hours
+                            p.fline-height.blog-item__presentation-hour-publish(data-date= post.created_at)
                             p.fline-height.blog-item__presentation-comments 2 comments
                             div.blog-item__presentation-ranking
                                 i.fas.fa-star
@@ -26,3 +26,9 @@ block content
                                     i.fab.fa-twitter
                                 a(href='#')
                                     i.fab.fa-google-plus
+    script.
+        const parraphAgoP = document.querySelectorAll(".blog-item__presentation-hour-publish");
+        parraphAgoP.forEach(function(element){
+            let date = moment(element.dataset.date);
+            element.innerHTML = date.locale('es').startOf('day').fromNow()+", "+date.locale('es').endOf('day').fromNow();
+        })

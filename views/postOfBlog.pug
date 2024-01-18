@@ -4,7 +4,7 @@ block content
         div.postOfBlog-contenedor
             article.postOfBlog-content
                 h2.fline-height.postOfBlog-content__title= post.title
-                p.postOfBlog-content__date-publish= `${new Date(post.created_at)}`
+                p.postOfBlog-content__date-publish(data-date= post.created_at)
                 p.postOfBlog-content__category
                     span= post.nombre_categoria
                 img.postOfBlog-content__image(src=`/images/dashboard/post/${post.image}`)
@@ -30,3 +30,7 @@ block content
                             a(href="#") Analisis de Datos
                         li.fline-height
                             a(href="#") Ingenieria de Software
+    script.
+        const parraphDate = document.querySelector(".postOfBlog-content__date-publish");
+        let date = moment(parraphDate.dataset.date);
+        parraphDate.innerHTML = "Publicado en: " + date.locale('es').format("MMMM DD, YYYY - h:mm:ss a");
