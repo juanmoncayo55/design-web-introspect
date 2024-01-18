@@ -1,9 +1,9 @@
 (function(c, d, w){
+
     const inputPhotoPerfil = d.querySelector("#input-photo-perfil"),
         openFile = d.querySelector("#openFile"),
         formInputPhoto = d.querySelector("#formInputPhoto"),
         spinnerContent = d.querySelector(".spinner-content");
-
 
     let pathName = window.location.pathname;
     if(pathName === '/home/dashboard'){
@@ -17,7 +17,6 @@
     }else{
         document.querySelector(".dashboard-navigation-link").classList.remove("dashboard-navigation-link-active");
     }
-
 
     openFile.addEventListener("click", function(e){
         e.preventDefault()

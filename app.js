@@ -81,7 +81,9 @@ app.get('/somos', (req, res, next) => {
 app.get('/blog', (req, res, next) => {
 	res.render('blog', {title: "Sección de Blog - Introspect"});
 });
-
+app.get('/blog/titulo-de-blog', (req, res, next) => {
+	res.render('postOfBlog', {title: "Sección de Blog - Introspect"});
+});
 app.get('/contactanos', (req, res, next) => {
 	res.render('contactanos', {title: "Contactanos - Introspect"});
 });

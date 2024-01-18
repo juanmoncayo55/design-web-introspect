@@ -1502,6 +1502,102 @@ font-size: 2.6rem;
 		border-right: none;
 	}
 }
+/* Estilos para la Página de mostrar todo el contenido del Post */
+.postOfBlog-mt4{margin-top: 4rem;}
+.postOfBlog-contenedor{
+	display: flex;
+    justify-content: space-between;
+    column-gap: 3rem;
+}
+.postOfBlog-content{
+	flex: 0 1 65%;
+}
+.postOfBlog-right{
+	flex: 0 1 30%;
+}
+.postOfBlog-content__title{}
+.postOfBlog-content__date-publish{
+	color: #6d6d6d;
+    font-style: italic;
+    font-size: 1.6rem;
+	line-height: normal;
+    margin: 1.3rem 0;
+}
+.postOfBlog-content__category{
+    margin-bottom: 1.5rem;
+	display: flex;
+    column-gap: 1rem;
+}
+.postOfBlog-content__category span {
+    background-color: #70747c;
+    color: #FFF;
+    font-weight: bold;
+    padding: 0.3rem 0.8rem;
+    font-size: 1.4rem;
+    border-radius: 0.5rem;
+    line-height: normal;
+}
+.postOfBlog-content__textLong-content{
+	font-size: 2.1rem;
+    line-height: 2.8rem;
+    margin-bottom: 2rem;
+    color: var(--grisTexto);
+}
+.postOfBlog-right__box{
+	border: 1px solid #CCC;
+    border-radius: 0.8rem;
+	margin-bottom: 3rem;
+}
+.postOfBlog-right__box-title{
+	background-color: #00000008;
+    border-bottom: 1px solid #CCC;
+    padding: 1rem 1.5rem;
+    line-height: normal;
+    font-size: 1.8rem;
+}
+.postOfBlog-right__search-form{
+	padding: 1.5rem;
+    display: flex;
+}
+form.postOfBlog-right__search-form input[type=search]{
+	flex: 1;
+    border: 1px solid #CCC;
+    border-radius: 0.8rem 0 0 0.8rem;
+    outline: none;
+    padding: 0.9rem 1.2rem;
+    color: var(--grisTexto);
+}
+form.postOfBlog-right__search-form input[type=submit]{
+	padding: 1rem;
+    border-radius: 0 0.8rem 0.8rem 0;
+    border: 0px;
+    background-color: var(--primario);
+    color: #FFF;
+    cursor: pointer;
+	transition: .2s all ease-in-out;
+}
+form.postOfBlog-right__search-form input[type=submit]:hover{
+	background-color: #cf3f42;
+}
+.postOfBlog-right__listOfLink{
+	padding: 0.9rem 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    column-gap: 2rem;
+    row-gap: 0.2rem;
+}
+.postOfBlog-right__listOfLink li{list-style: none;}
+.postOfBlog-right__listOfLink li a{
+	color: #038fff;
+    font-size: 1.55rem;
+	text-decoration: underline;
+}
+.postOfBlog-right__listOfLink li a:hover{color: #1677c5;}
+@media (max-width: 860px){
+	.postOfBlog-contenedor{flex-direction: column;}
+	.postOfBlog-content, .postOfBlog-right{flex: none;}
+}
 /* Seccion de Agregar un Post */
 .addPost-title{margin-bottom: 3rem;}
 .formulario-addPost textarea{

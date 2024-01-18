@@ -1,0 +1,37 @@
+extends layout.pug
+block content
+    section.contenedor.postOfBlog-mt4
+        div.postOfBlog-contenedor
+            article.postOfBlog-content
+                h2.fline-height.postOfBlog-content__title Welcome to Blog Post!
+                p.postOfBlog-content__date-publish Posted on January 1, 2023 by Start Bootstrap
+                p.postOfBlog-content__category
+                    span Web Design
+                    span Freebies
+                img.postOfBlog-content__image(src="/images/exampleImagePost.jpg")
+                p.postOfBlog-content__textLong-content Science is an enterprise that should be cherished as an activity of the free human mind. Because it transforms who we are, how we live, and it gives us an understanding of our place in the universe.
+                p.postOfBlog-content__textLong-content The universe is large and old, and the ingredients for life as we know it are everywhere, so there's no reason to think that Earth would be unique in that regard. Whether of not the life became intelligent is a different question, and we'll see if we find that.
+                p.postOfBlog-content__textLong-content If you get asteroids about a kilometer in size, those are large enough and carry enough energy into our system to disrupt transportation, communication, the food chains, and that can be a really bad day on Earth.
+                p.postOfBlog-content__textLong-content For me, the most fascinating interface is Twitter. I have odd cosmic thoughts every day and I realized I could hold them to myself or share them with people who might be interested.
+                p.postOfBlog-content__textLong-content Venus has a runaway greenhouse effect. I kind of want to know what happened there because we're twirling knobs here on Earth without knowing the consequences of it. Mars once had running water. It's bone dry today. Something bad happened there as well.
+            aside.postOfBlog-right
+                div.postOfBlog-right__box
+                    p.postOfBlog-right__box-title Buscar
+                    form.postOfBlog-right__search-form(action="#", method="GET", id="formulario-buscador")
+                        input(type="search", id="search-form", name="form_buscar_txt", placeholder="Introdusca texto para buscar...")
+                        input(type="submit", value="Go!")
+                div.postOfBlog-right__box
+                    p.postOfBlog-right__box-title Categorias
+                    ol.postOfBlog-right__listOfLink
+                        li.fline-height
+                            a(href="#") Desarrollador Web
+                        li.fline-height
+                            a(href="#") Desarrollador Frontend
+                        li.fline-height
+                            a(href="#") Desarrollador Backend
+                        li.fline-height
+                            a(href="#") Administrador de Bases de Datos
+                        li.fline-height
+                            a(href="#") Analisis de Datos
+                        li.fline-height
+                            a(href="#") Ingenieria de Software
