@@ -71,7 +71,7 @@ block content
             console.log(post);
             document.querySelector(".post-read").innerHTML = `<p class="post-read__title">${post.title}</p>
                     <img src=/images/dashboard/post/${post.image} class="post-read__image" />
-                    <p class="post-read__date">${post.created_at}</p>
+                    <p class="post-read__date">${new Date(post.created_at)}</p>
                     <p class="post-read__content">${post.content}</p>
                     <div class="post-read__bar">
                         <p class="post-read__bar-category">Desarrollo Web</p>

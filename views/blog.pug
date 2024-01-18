@@ -3,13 +3,13 @@ block content
     - var text = 'Multos fabulas ubi eruditionem, nulla eiusmod occaecat. Consequat ea quem. Ita an voluptatibus te tamen de ingeniis, fore adipisicing mandaremus quid nostrud ita aut commodo firmissimum, et fugiat coniunctione o admodum a ipsum possumus, nescius o velit ex malis nescius sed ullamco. Mentitum summis senserit, quo minim deserunt in offendit familiaritatem ab cupidatat ita summis probant illustriora.Quamquam esse qui quamquam reprehenderit id quid aliquip philosophari. In multos quibusdam, eram efflorescere doctrina noster admodum ea  probant malis fugiat laborum labore se fabulas praetermissum ad excepteur. Aut nisi dolor tamen arbitror.'
     section.contenedor
         div.blog-contenedor
-            each post in [1,2,3,4,5]
+            each post in posts
                 article.blog-item__presentation
-                    img.blog-item__presentation-graphic(src="/images/pic01.jpg")
+                    img.blog-item__presentation-graphic(src=`/images/dashboard/post/${post.image}`)
                     div.blog-item__presentation-content
-                        a.fline-height.blog-item__presentation-title(href="/blog/titulo-de-blog") Receta 1
-                        p.fline-height.blog-item__presentation-publisher JMMoriones
-                        p.blog-item__presentation-description= text.substr(0,400) + '...'
+                        a.fline-height.blog-item__presentation-title(href="/blog/"+post.id)= post.title
+                        p.fline-height.blog-item__presentation-publisher By: #{post.nombre_usuario}
+                        p.blog-item__presentation-description= post.content.substr(0,400) + '...'
                         div.blog-item__presentation-manegePost
                             p.fline-height.blog-item__presentation-hour-publish 2 days, 8 hours
                             p.fline-height.blog-item__presentation-comments 2 comments

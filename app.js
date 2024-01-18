@@ -79,10 +79,28 @@ app.get('/somos', (req, res, next) => {
 });
 
 app.get('/blog', (req, res, next) => {
-	res.render('blog', {title: "Sección de Blog - Introspect"});
+	req.getConnection((err, conn) => {
+		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, post.user_id, category.name AS 'nombre_categoria', users.user_name AS 'nombre_usuario' FROM post INNER JOIN category ON post.category_id = category.id INNER JOIN users ON post.user_id = users.id WHERE post.status = 0 ORDER BY post.created_at DESC", (err, data) => {
+			if(err)
+				res.status(502).json({error: "No se logró traer la información de la base de datos, hubo un error en el gestor de base de datos."});
+			else res.render('blog', {title: "Sección de Blog - Introspect", posts: data});
+		});
+	});
 });
-app.get('/blog/titulo-de-blog', (req, res, next) => {
+/*app.get('/blog/titulo-de-blog', (req, res, next) => {
 	res.render('postOfBlog', {title: "Sección de Blog - Introspect"});
+});*/
+app.get('/blog/:id', (req, res, next) => {
+	let idPost = req.params.id;
+	//SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, category.name AS "nombre_categoria" FROM post INNER JOIN category ON post.category_id = category.id WHERE id = ?
+
+	req.getConnection((err, conn) => {
+		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, category.name AS 'nombre_categoria' FROM post INNER JOIN category ON post.category_id = category.id WHERE post.id = ?", idPost, (err, data) => {
+			if(err)
+				res.status(502).json({error: "No se logró traer la información de la base de datos, hubo un error en el gestor de base de datos."});
+			else res.render('postOfBlog', {title: "Sección de Blog - Introspect", post: data[0]});
+		});
+	});
 });
 app.get('/contactanos', (req, res, next) => {
 	res.render('contactanos', {title: "Contactanos - Introspect"});
@@ -470,7 +488,6 @@ app.get('/home/adminBlog', (req, res, next) => {
 				if(err)
 					res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 				else{
-
 					conn.query("SELECT * FROM post WHERE user_id = ? ORDER BY id DESC", req.session.userId, (err, posts) => {
 						if(err)
 							res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
@@ -511,7 +528,6 @@ app.post('/new-post', (req, res, next) => {
 						brief: req.body.brief_txt,
 						content: req.body.content_txt,
 						image: name_photo,
-						created_at: req.body.created_at,
 						status: req.body.status,
 						category_id: req.body.category_slc,
 						user_id: req.body.idUser
