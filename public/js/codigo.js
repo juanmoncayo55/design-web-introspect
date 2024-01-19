@@ -1,25 +1,3 @@
-const linkToMenuDash = document.querySelectorAll(".dashboard-navigation-link");
-let pathName = window.location.pathname;
-linkToMenuDash.forEach(function(item, i){
-    if(pathName === '/home/dashboard'){
-        (item.textContent == "Inicio")
-            ? item.classList.add("dashboard-navigation-link-active")
-            : item.classList.remove("dashboard-navigation-link-active")
-    }else if(pathName === '/home/admin-site'){
-        (item.textContent == "Editar Sitio")
-            ? item.classList.add("dashboard-navigation-link-active")
-            : item.classList.remove("dashboard-navigation-link-active")
-    }else if(pathName === '/home/adminBlog'){
-        (item.textContent == "Blog")
-            ? item.classList.add("dashboard-navigation-link-active")
-            : item.classList.remove("dashboard-navigation-link-active")
-    }else if(pathName === '/home/users'){
-        (item.textContent == "Usuarios")
-            ? item.classList.add("dashboard-navigation-link-active")
-            : item.classList.remove("dashboard-navigation-link-active")
-    }
-});
-
 const d = document, c = console.log, w = window;
 const inputPhotoPerfil = d.querySelector("#input-photo-perfil"),
     openFile = d.querySelector("#openFile"),

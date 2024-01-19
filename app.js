@@ -84,7 +84,7 @@ app.get('/somos', (req, res, next) => {
 
 app.get('/blog', (req, res, next) => {
 	req.getConnection((err, conn) => {
-		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, post.user_id, category.name AS 'nombre_categoria', users.user_name AS 'nombre_usuario' FROM post INNER JOIN category ON post.category_id = category.id INNER JOIN users ON post.user_id = users.id WHERE post.status = 0 ORDER BY post.created_at DESC", (err, data) => {
+		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, post.user_id, category.name AS 'nombre_categoria', users.user_name AS 'nombre_usuario' FROM post INNER JOIN category ON post.category_id = category.id INNER JOIN users ON post.user_id = users.id WHERE post.status = 0 AND post.validate = 1 ORDER BY post.created_at DESC", (err, data) => {
 			if(err)
 				res.status(502).json({error: "No se logró traer la información de la base de datos, hubo un error en el gestor de base de datos."});
 			else res.render('blog', {title: "Sección de Blog - Introspect", posts: data});
@@ -99,7 +99,7 @@ app.get('/blog/:id', (req, res, next) => {
 	//SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, category.name AS "nombre_categoria" FROM post INNER JOIN category ON post.category_id = category.id WHERE id = ?
 
 	req.getConnection((err, conn) => {
-		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, category.name AS 'nombre_categoria' FROM post INNER JOIN category ON post.category_id = category.id WHERE post.id = ?", idPost, (err, data) => {
+		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, category.name AS 'nombre_categoria' FROM post INNER JOIN category ON post.category_id = category.id WHERE post.id = ? AND post.validate = 1", idPost, (err, data) => {
 			if(err)
 				res.status(502).json({error: "No se logró traer la información de la base de datos, hubo un error en el gestor de base de datos."});
 			else res.render('postOfBlog', {title: "Sección de Blog - Introspect", post: data[0]});
@@ -273,8 +273,34 @@ app.get('/home/admin-site/administrator-users', (req, res, next) => {
 });
 app.get('/home/admin-site/administrator-post', (req, res, next) => {
 	if(req.session.user && req.session.user[0].rol == 0){
-		res.render('administratorPost', {title: "Administrando publicaciones", userLogued: req.session.user[0], menuSend: menuSend});
+		req.getConnection((err, conn) => {
+			conn.query("SELECT id, title, validate FROM post WHERE validate = 0 ORDER BY id DESC", (err, data) => {
+				if(!err){
+					res.render('administratorPost', {
+						title: "Administrando publicaciones",
+						userLogued: req.session.user[0],
+						menuSend: menuSend,
+						posts: data
+					});
+				}else res.status(200).json({message: "No encontraron registros."});
+			});
+		});
 	}else res.redirect('/login')
+});
+app.post('/validate-post-public', (req, res, next) => {
+	if(req.session.user && req.session.user[0].rol == 0){
+		req.getConnection((err, conn) => {
+			let post = {
+				id: req.body.id_post,
+				val: req.body.validate
+			};
+			conn.query("UPDATE post SET validate = ? WHERE id = ?", [post.val, post.id], (err, data) => {
+				if(!err){
+					res.status(200).json({message: "Se valido la publicación con exito."})
+				}else res.status(200).json({message: "Hubo un error no se pudo validar la publicación."});
+			});
+		});
+	}
 });
 app.get('/home/admin-site/administrator-email', (req, res, next) => {
 	if(req.session.user && req.session.user[0].rol == 0){

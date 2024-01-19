@@ -1,35 +1,40 @@
 extends layout.pug
 block content
     section.contenedor.postOfBlog-mt4
-        div.postOfBlog-contenedor
-            article.postOfBlog-content
-                h2.fline-height.postOfBlog-content__title= post.title
-                p.postOfBlog-content__date-publish(data-date= post.created_at)
-                p.postOfBlog-content__category
-                    span= post.nombre_categoria
-                img.postOfBlog-content__image(src=`/images/dashboard/post/${post.image}`)
-                p.postOfBlog-content__textLong-content= post.content
-            aside.postOfBlog-right
-                div.postOfBlog-right__box
-                    p.postOfBlog-right__box-title Buscar
-                    form.postOfBlog-right__search-form(action="#", method="GET", id="formulario-buscador")
-                        input(type="search", id="search-form", name="form_buscar_txt", placeholder="Introdusca texto para buscar...")
-                        input(type="submit", value="Go!")
-                div.postOfBlog-right__box
-                    p.postOfBlog-right__box-title Categorias
-                    ol.postOfBlog-right__listOfLink
-                        li.fline-height
-                            a(href="#") Desarrollador Web
-                        li.fline-height
-                            a(href="#") Desarrollador Frontend
-                        li.fline-height
-                            a(href="#") Desarrollador Backend
-                        li.fline-height
-                            a(href="#") Administrador de Bases de Datos
-                        li.fline-height
-                            a(href="#") Analisis de Datos
-                        li.fline-height
-                            a(href="#") Ingenieria de Software
+        if(post != null)
+            div.postOfBlog-contenedor
+                article.postOfBlog-content
+                    h2.fline-height.postOfBlog-content__title= post.title
+                    p.postOfBlog-content__date-publish(data-date= post.created_at)
+                    p.postOfBlog-content__category
+                        span= post.nombre_categoria
+                    img.postOfBlog-content__image(src=`/images/dashboard/post/${post.image}`)
+                    p.postOfBlog-content__textLong-content= post.content
+                aside.postOfBlog-right
+                    div.postOfBlog-right__box
+                        p.postOfBlog-right__box-title Buscar
+                        form.postOfBlog-right__search-form(action="#", method="GET", id="formulario-buscador")
+                            input(type="search", id="search-form", name="form_buscar_txt", placeholder="Introdusca texto para buscar...")
+                            input(type="submit", value="Go!")
+                    div.postOfBlog-right__box
+                        p.postOfBlog-right__box-title Categorias
+                        ol.postOfBlog-right__listOfLink
+                            li.fline-height
+                                a(href="#") Desarrollador Web
+                            li.fline-height
+                                a(href="#") Desarrollador Frontend
+                            li.fline-height
+                                a(href="#") Desarrollador Backend
+                            li.fline-height
+                                a(href="#") Administrador de Bases de Datos
+                            li.fline-height
+                                a(href="#") Analisis de Datos
+                            li.fline-height
+                                a(href="#") Ingenieria de Software
+        else
+            div.message-posts
+                p.message-posts_text ¿Estas pérdido? vuelve al <a href="/">Inicio</a>
+                i.fas.fa-flushed
     script.
         const parraphDate = document.querySelector(".postOfBlog-content__date-publish");
         let date = moment(parraphDate.dataset.date);

@@ -1,3 +1,103 @@
 extends dashboard.pug
 
 block content
+    section.dashboard-change_post-val
+        nav.breadcrumb-nav
+            ol.breadcrumb
+                li.breadcrumb-item
+                    a(href="/home/dashboard") Home
+                li.breadcrumb-item
+                    a(href="/home/admin-site") Editar Sitio
+                li.breadcrumb-item.active(aria-current="page") Validar Publicaciones
+        p.warning-user-show.dnone
+        if(posts.length)
+            table.table.table-posts
+                thead
+                    tr
+                        th ID
+                        th Title
+                        th Validación
+                        th
+                tbody
+                    each post in posts
+                        tr
+                            td.th-bold-post.th-text-center(data-label="ID") #{post.id}
+                            td(data-label="Title") #{post.title}
+                            td.th-text-center(data-label="Validación") #{post.validate}
+                            td.centrar-text.table-data-action
+                                a.table-action(href=`#`, title="Editar", onclick=`openModalValidate(event, ${post.id}, ${post.validate});`)
+                                    i.fa-regular.fa-pen-to-square
+        else
+            div.message-posts
+                p.message-posts_text No hay publicaciones para mostrar.
+                i.far.fa-frown
+        div#modalEditValidation.overlay.closeWindowUser
+            div.popUp-user
+                form#formChangeValidation.formulario-changeForUser.formulario-changeForValPost(method="POST", action="#", encType="application/x-www-form-urlencoded")
+                    input(type="hidden", name="id_post", id="id_post")
+                    fieldset
+                        legend Validando publicación de usuario
+                        div.formulario-changeForUser-content-radio
+                            p Valida la publicación
+                            div.formulario-changeForUser-radio.mb1-5
+                                input(type="radio", name="validate", value="0", id="no_publicado")
+                                label(for="no_publicado") No Publicado
+                            div.formulario-changeForUser-radio
+                                input(type="radio", name="validate", value="1", id="publicado")
+                                label(for="publicado") Publicado
+                    input#actionFormChangeValidation.boton.formulario__send(type='submit' value='Enviar validación')
+                    a#closeModalEditValidation.boton.closePopUpUserAddStyle(href="#") Cerrar
+        script.
+            const modalEditValidation = document.querySelector("#modalEditValidation"),
+                closeModalEditValidation = document.querySelector("#closeModalEditValidation"),
+                formChangeValidation = document.querySelector("#formChangeValidation"),
+                resultMessage = document.querySelector(".warning-user-show");
+
+            closeModalEditValidation.addEventListener("click", function(e){
+                e.preventDefault();
+                modalEditValidation.classList.toggle("closeWindowUser");
+            });
+            function openModalValidate(event, idPost, val){
+                event.preventDefault();
+                document.querySelector("#id_post").value = idPost;
+                let radios = document.querySelectorAll(".formulario-changeForValPost input[type=radio]");
+                radios.forEach(function(radio){
+                    if(radio.value == val){
+                        console.log("Entro en el IF");
+                        radio.checked = true;
+                    }else{
+                        console.log("Entro en el ELSE");
+                        radio.checked = false;
+                    }
+                });
+                modalEditValidation.classList.toggle("closeWindowUser");
+            }
+            formChangeValidation.addEventListener("submit", function(e){
+                e.preventDefault();
+                const formData = new FormData(formChangeValidation);
+                //console.log("Validate: "+formData.get("validate"), "ID: "+formData.get("id_post"))
+                fetch("/validate-post-public", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(data => data.json())
+                    .then(result => {
+                        modalEditValidation.classList.toggle("closeWindowUser");
+                        resultMessage.classList.toggle("dnone");
+                        resultMessage.innerHTML = result.message;
+                        setTimeout(function(){
+                            resultMessage.classList.toggle("dnone");
+                            resultMessage.innerHTML = "";
+                        }, 8000);
+                    })
+                    .catch(err => {
+                        console.log(error);
+                        modalEditValidation.classList.toggle("closeWindowUser");
+                        resultMessage.classList.toggle("dnone");
+                        resultMessage.innerHTML = result.message;
+                        setTimeout(function(){
+                            resultMessage.classList.toggle("dnone");
+                            resultMessage.innerHTML = "";
+                        }, 8000);
+                    });
+            });

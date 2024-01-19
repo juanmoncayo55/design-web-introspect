@@ -77,6 +77,29 @@ html(lang="es")
 					block content
 		script(src="/js/codigo.js")
 		script.
+			const linkToMenuDash = document.querySelectorAll(".dashboard-navigation-link");
+			let pathName = window.location.pathname;
+			linkToMenuDash.forEach(function(linkMenu){
+				if(pathName === '/home/dashboard'){
+					(linkMenu.textContent == "Inicio")
+						? linkMenu.classList.add("dashboard-navigation-link-active")
+						: linkMenu.classList.remove("dashboard-navigation-link-active")
+				}else if(pathName === '/home/admin-site'){
+					(linkMenu.textContent == "Editar Sitio")
+						? linkMenu.classList.add("dashboard-navigation-link-active")
+						: linkMenu.classList.remove("dashboard-navigation-link-active")
+				}else if(pathName === '/home/adminBlog'){
+					(linkMenu.textContent == "Blog")
+						? linkMenu.classList.add("dashboard-navigation-link-active")
+						: linkMenu.classList.remove("dashboard-navigation-link-active")
+				}else if(pathName === '/home/users'){
+					(linkMenu.textContent == "Usuarios")
+						? linkMenu.classList.add("dashboard-navigation-link-active")
+						: linkMenu.classList.remove("dashboard-navigation-link-active")
+				}else{
+					linkMenu.classList.remove("dashboard-navigation-link-active")
+				}
+			});
 			(function(c, d){
 				const userR = d.querySelector("#user-r"),
 					panelUserMenu = d.querySelector(".dashboard-panel__header-user-menu"),

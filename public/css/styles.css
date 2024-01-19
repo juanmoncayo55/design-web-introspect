@@ -1657,6 +1657,9 @@ form.postOfBlog-right__search-form input[type=submit]:hover{
 .blog-posts-post__see{background-color: #03A9F4;}
 .blog-posts-post__edit{background-color: #4CAF50;margin: 0 1rem;}
 .blog-posts-post__delete{background-color: #ed2929;}
+.table-posts thead th{padding: 1.3rem 1rem;}
+.th-text-center{text-align: center;}
+.th-bold-post{font-weight: bold;}
 /*Temporal*/
 .formulario-addPost__radio, .formulario-changeForUser-radio{
 	display: flex;
@@ -1902,4 +1905,25 @@ section.edit-somos-section a img {display: block;transition: .5s all ease-in-out
     margin-bottom: 1.5rem;
     display: block;
     line-height: normal;
+}
+.warning-user-show{
+	background-color: var(--grisTexto);
+    color: #FFF;
+    padding: 0.5rem 1.5rem;
+    font-size: 1.8rem;
+    letter-spacing: .3px;
+    border-radius: 1rem;
+    line-height: normal;
+    text-align: center;
+}
+.message-posts{
+	display: flex;
+    flex-direction: column-reverse;
+    text-align: center;
+    line-height: normal;
+}
+.message-posts i{
+	font-size: 4rem;
+    color: var(--primario);
+    font-weight: bold;
 }
