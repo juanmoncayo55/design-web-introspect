@@ -501,7 +501,7 @@ img{max-width: 100%;}
 .signup .signup-title{
 	font-size: 2.5rem;
 }
-.signup-formulario, .login-formulario{ display: block; }
+.signup-formulario, .login-formulario{ display: block;margin-top: 3rem; }
 
 .signup-formulario .campo__input, .login-formulario .campo__input, .formulario-dashboard-userProfile .campo__input{
 	background-color: transparent;
@@ -519,7 +519,7 @@ img{max-width: 100%;}
 	border: 3px solid var(--primario);
 }
 
-.signup-formulario .formulario__send, .signup-formulario .formulario__inicio, .login-formulario .formulario__send{
+.signup-formulario .formulario__send, .signup-formulario .formulario__inicio, .login-formulario .formulario__send, .formulario-changeForUser .formulario__send{
 	font-size: 1.4rem;
 	transition: .2s opacity ease-in-out;
 	background-color: var(--primario);
@@ -529,7 +529,7 @@ img{max-width: 100%;}
 
 .signup-formulario .formulario__inicio{ background-color: var(--grisTexto); margin-left: 2.5rem;}
 
-.signup-formulario .formulario__send:hover, .signup-formulario .formulario__inicio:hover, .login-formulario .formulario__send:hover{
+.signup-formulario .formulario__send:hover, .signup-formulario .formulario__inicio:hover, .login-formulario .formulario__send:hover, .formulario-changeForUser .formulario__send:hover{
 	opacity: .9;
 }
 
@@ -1008,7 +1008,7 @@ img{max-width: 100%;}
 	border: 0;
 	border-bottom: 3px solid var(--primario);
 }
-.formulario-dashboard-userProfile select, .formulario-addUser .select-pais select, .formulario-addPost .select-category select{
+.formulario-dashboard-userProfile select, .formulario-addUser .select-pais select, .formulario-addPost .select-category select, .formulario-changeForUser-select select{
 	border: 3px solid rgb(229 71 75 / 21%);
     color: #616161;
     padding: 0.8rem 1.2rem;
@@ -1020,13 +1020,13 @@ img{max-width: 100%;}
     -moz-appearance: none;
     appearance: none;
 }
-.formulario-addUser .select-pais, .formulario-addPost .select-category{margin-bottom: 1.8rem;}
-.select-pais, .formulario-addPost .select-category{
+.formulario-addUser .select-pais, .formulario-addPost .select-category, .formulario-changeForUser-select{margin-bottom: 1.8rem;}
+.select-pais, .formulario-addPost .select-category, .formulario-changeForUser-select{
 	position: relative;
 	max-width: 32rem;
 	width: 100%;
 }
-.select-pais:after, .formulario-addPost .select-category:after{
+.select-pais:after, .formulario-addPost .select-category:after, .formulario-changeForUser-select:after{
 	content: '\f078';
     font-family: FontAwesome;
 	color: var(--primario);
@@ -1042,7 +1042,7 @@ img{max-width: 100%;}
     align-items: center;
     justify-content: center;
 }
-.select-pais select:focus, .formulario-addPost .select-category select:focus{
+.select-pais select:focus, .formulario-addPost .select-category select:focus, .formulario-changeForUser-select select:focus{
 	border-color: #e5474b;
     box-shadow: 0 0 0 1px #e5474b;
 }
@@ -1658,13 +1658,13 @@ form.postOfBlog-right__search-form input[type=submit]:hover{
 .blog-posts-post__edit{background-color: #4CAF50;margin: 0 1rem;}
 .blog-posts-post__delete{background-color: #ed2929;}
 /*Temporal*/
-.formulario-addPost__radio{
+.formulario-addPost__radio, .formulario-changeForUser-radio{
 	display: flex;
     align-items: center;
     line-height: 2.5rem;
     position: relative;
 }
-.formulario-addPost__radio input[type="radio"]:before {
+.formulario-addPost__radio input[type="radio"]:before, .formulario-changeForUser-radio input[type="radio"]:before{
 	content: "";
 	display: inline-block;
 	width: 2.5rem;
@@ -1676,16 +1676,16 @@ form.postOfBlog-right__search-form input[type=submit]:hover{
 	vertical-align: middle;
 	cursor: pointer;
 }
-.formulario-addPost__radio input[type="radio"]{
+.formulario-addPost__radio input[type="radio"], .formulario-changeForUser-radio input[type="radio"]{
 	height: 0;
 }
-.formulario-addPost__radio label{
+.formulario-addPost__radio label, .formulario-changeForUser-radio label{
 	padding-left: 2.5rem;
     font-size: 2rem;
     color: var(--grisTexto);
 	cursor:pointer;
 }
-.formulario-addPost__radio input[type="radio"]:checked::before {
+.formulario-addPost__radio input[type="radio"]:checked::before, .formulario-changeForUser-radio input[type="radio"]:checked::before{
 	background-color: var(--primario);
     content: "\f00c";
     font-family: FontAwesome;
@@ -1696,7 +1696,7 @@ form.postOfBlog-right__search-form input[type=submit]:hover{
     justify-content: center;
     align-items: center;
 }
-.formulario-addPost__radio.mb1-5{margin-bottom: 1.5rem}
+.formulario-addPost__radio.mb1-5, .formulario-changeForUser-radio.mb1-5{margin-bottom: 1.5rem}
 .closeWindowPost-content{
 	position:relative;
     width: 100rem;
@@ -1882,4 +1882,24 @@ section.edit-somos-section a img {display: block;transition: .5s all ease-in-out
 }
 @media (max-width: 980px){
 	.edit-somos-section a, .message-edit-textarea, .message-for-edit {width: 90%;}
+}
+/*Estilos para administrator site*/
+.formulario-changeForUser fieldset{
+	display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+}
+.formulario-changeForUser fieldset legend{
+	font-size: 1.8rem;
+    color: var(--grisTexto);
+    font-weight: bold;
+}
+.formulario-changeForUser-select label, .formulario-changeForUser-content-radio p{
+	font-size: 1.7rem;
+    font-weight: 550;
+    color: var(--grisTexto);
+    margin-bottom: 1.5rem;
+    display: block;
+    line-height: normal;
 }

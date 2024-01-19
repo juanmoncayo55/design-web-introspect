@@ -62,3 +62,12 @@ CREATE TABLE comment(
 ALTER TABLE comment
 ADD CONSTRAINT FK_commentPost
 FOREIGN KEY (post_id) REFERENCES post(id);
+
+
+
+
+
+/*Comando para traer los usuarios desde el administrador de usuarios*/
+SELECT id, first_name, last_name, user_name, rol, validate FROM users WHERE rol != 0 ORDER BY id DESC;
+/*Comando para editar los permisos de los usuarios*/
+UPDATE users SET rol = ?, validate = ? WHERE id = ?;

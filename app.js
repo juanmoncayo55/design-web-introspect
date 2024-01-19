@@ -49,6 +49,10 @@ app.use(publicDir);
 app.use(favicon);
 
 app.use(conn);
+
+//Declaramos esta variable global que necesitamos guardar el menu de administrador para acceder desde cualquier peticion en el servidor
+var menuSend;
+
 // En la cookie le damos el maximo de tiempo de 30 minutos(30 * 60 * 1000)
 app.use(session({
 	secret: 'user admin',
@@ -224,7 +228,7 @@ app.post('/login', (req, res, next) => {
 /****************--- DIRECCIONES PARA (DASHBOARD) ---****************/
 app.get('/home/admin-site', (req, res, next) => {
 	if(req.session.user){
-		res.render('editSitePage', {title: "Sección para editar Landing Page", userLogued: req.session.user[0]});
+		res.render('editSitePage', {title: "Sección para editar Landing Page", userLogued: req.session.user[0], menuSend: menuSend});
 	}else res.redirect('/login')
 });
 app.get('/home/admin-site/somos-edit-information', (req, res, next) => {
@@ -232,7 +236,7 @@ app.get('/home/admin-site/somos-edit-information', (req, res, next) => {
 		jsonfile.readFile(urlFileSomos, function (err, obj) {
 			if (err) console.error(err)
 			else{
-				res.render('sectionEditSomos', {title: "Editando Página de Somos", userLogued: req.session.user[0], content: obj});
+				res.render('sectionEditSomos', {title: "Editando Página de Somos", userLogued: req.session.user[0], content: obj, menuSend: menuSend});
 			}
 		})
 	}else res.redirect('/login')
@@ -245,17 +249,29 @@ app.post('/somos-information-edit', (req, res, next) => {
 });
 app.get('/home/admin-site/administrator-users', (req, res, next) => {
 	if(req.session.user){
-		res.render('administratorUsers', {title: "Administrando usuarios", userLogued: req.session.user[0]});
+		req.getConnection((err, conn) => {
+			conn.query("SELECT id, first_name, last_name, user_name, rol, validate FROM users WHERE rol != 0 ORDER BY id DESC", (err, data) => {
+				if(!err){
+					console.log(data)
+					res.render('administratorUsers', {
+						title: "Administrando usuarios",
+						userLogued: req.session.user[0],
+						menuSend: menuSend,
+						data
+					});
+				}else res.status(502).json({error: "Hubo un error en la Base de datos, por favor contacte al administrador."});
+			});
+		});
 	}else res.redirect('/login')
 });
 app.get('/home/admin-site/administrator-post', (req, res, next) => {
 	if(req.session.user){
-		res.render('administratorPost', {title: "Administrando publicaciones", userLogued: req.session.user[0]});
+		res.render('administratorPost', {title: "Administrando publicaciones", userLogued: req.session.user[0], menuSend: menuSend});
 	}else res.redirect('/login')
 });
 app.get('/home/admin-site/administrator-email', (req, res, next) => {
 	if(req.session.user){
-		res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0]});
+		res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0], menuSend: menuSend});
 	}else res.redirect('/login')
 });
 /****************--- DIRECCIONES PARA Users (DASHBOARD) ---****************/
@@ -263,6 +279,24 @@ app.get('/home/admin-site/administrator-email', (req, res, next) => {
 app.get('/home/dashboard', (req, res, next) => {
 	let userId = req.session.userId,
 		user = req.session.user;
+	const buildMenu = {
+		"menuAdmin": [
+			{url:"/home/dashboard", name:"Inicio"},
+			{url:"/home/admin-site", name:"Editar Sitio"},
+			{url:"/home/adminBlog", name:"Blog"},
+			{url:"/home/users", name:"Usuarios"},
+			{url:"#", name:"Calendar"}
+		],
+		"menuPublish": [
+			{url:"/home/dashboard", name:"Inicio"},
+			{url:"/home/adminBlog", name:"Blog"},
+			{url:"#", name:"Calendar"}
+		],
+		"menuInteraction": [
+			{url:"/home/dashboard", name:"Inicio"},
+			{url:"#", name:"Calendar"}
+		]
+	}
 	if(user == undefined){
 		res.redirect('/login');
 		return;
@@ -270,7 +304,19 @@ app.get('/home/dashboard', (req, res, next) => {
 		console.log("Sesion en Login: ", req.session)
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM users WHERE id = ?", user[0].id, (err, data) => {
-				res.render('dashboard', {title: "Dashboard", user: data[0], userLogued: req.session.user[0], home: true});
+				if(data[0].rol == 0)
+					menuSend = buildMenu.menuAdmin;
+				else if(data[0].rol == 1)
+					menuSend = buildMenu.menuPublish;
+				else if(data[0].rol == 2)
+					menuSend = buildMenu.menuInteraction;
+				res.render('dashboard', {
+					title: "Dashboard",
+					home: true,
+					user: data[0],
+					userLogued: req.session.user[0],
+					menuSend: menuSend
+				});
 				console.log("Dashboard Correcto: ", data);
 			});
 		});
@@ -292,7 +338,7 @@ app.get('/home/profile', (req, res, next) => {
 
 			conn.query("SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?", req.session.userId, (err, data) => {
 				console.log(data)
-				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0], paises: paises})
+				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0], paises: paises, menuSend: menuSend})
 			});
 		});
 	}else{
@@ -349,7 +395,7 @@ app.get('/home/users', (req, res, next) => {
 			conn.query(`SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id != ${idUser} ORDER BY users.id DESC`, (err, data) => {
 				if(!err){
 					console.log(data);
-					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data, paises});
+					res.render('users', { title: "Usuarios de Introspect", userLogued: req.session.user[0], users: data, paises, menuSend: menuSend});
 				}else console.log("Error: ", err)
 			});
 		});
@@ -374,7 +420,7 @@ app.get('/home/edit-user/:id', (req, res, next) => {
 			});
 
 			conn.query("SELECT users.id, users.first_name, users.last_name, users.mob_no, users.user_name, users.password, users.email, users.imagen_avatar, users.country, users.area_working, countrys.name_country FROM users INNER JOIN countrys ON users.country = countrys.id WHERE users.id = ?", id, (err, data) => {
-				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0], paises: paises})
+				res.render('profile', {title: "Información del usuario", user: data[0], userLogued: req.session.user[0], paises: paises, menuSend})
 			});
 		});
 	}else{
@@ -469,6 +515,23 @@ app.post('/user-add', (req, res, next) => {
 });
 // End - Add User
 
+// Edit permissions for Admin
+app.post('/update-permissions-user', (req, res, next) => {
+	req.getConnection((err, conn) => {
+		let u = {
+			id: req.body.id_user,
+			rol: req.body.rol_slc,
+			val: req.body.validate
+		};
+		conn.query("UPDATE users SET rol = ?, validate = ? WHERE id = ?;", [u.rol, u.validate, u.id], (err, data) => {
+			if(!err){
+				res.status(200).json({message: "Los permisos fueron cambiados correctamente."});
+			}else res.status(502).json({error: "No se pudo actualizar los Datos."});
+		});
+	});
+});
+// End - Edit permissions for Admin
+
 /****************--- DIRECCIONES PARA BLOG'S (DASHBOARD) ---****************/
 // Blog
 app.get('/home/adminBlog', (req, res, next) => {
@@ -492,7 +555,7 @@ app.get('/home/adminBlog', (req, res, next) => {
 						if(err)
 							res.status(500).json({error: "No se pudo traer los datos, hubo un error en la BD"});
 						else{
-							res.render('adminBlog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: categories, posts: posts});
+							res.render('adminBlog', {title: "Administrar Blogs - Introspect", userLogued: req.session.user[0], categories: categories, posts: posts, menuSend: menuSend});
 						}
 					});
 
@@ -568,7 +631,7 @@ app.get('/home/edit-post/:id', (req, res, next) => {
 				if(err)
 					res.status(500).json({error: "Hubo un error en la BD, vuelve a intentarlo mas tarde"});
 				else{
-					res.render('editPost', {title: "Editando Post de Blog", userLogued: req.session.user[0], post: data[0], categories});
+					res.render('editPost', {title: "Editando Post de Blog", userLogued: req.session.user[0], post: data[0], categories, menuSend: menuSend});
 				}
 			});
 		});

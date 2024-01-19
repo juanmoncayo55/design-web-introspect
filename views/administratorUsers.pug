@@ -5,3 +5,96 @@ block content
         //- Editor de BLOG
         //- Solo comentarios y interaccion con los blogs
         //- Crear eventos en el calendario
+    nav.breadcrumb-nav
+        ol.breadcrumb
+            li.breadcrumb-item
+                a(href="/home/dashboard") Home
+            li.breadcrumb-item
+                a(href="/home/admin-site") Editar Sitio
+            li.breadcrumb-item.active(aria-current="page") Administrar usuarios
+    if(data.length)
+        table.table
+            thead
+                tr
+                    th ID
+                    th Primer Nombre
+                    th Primer Apellido
+                    th Username
+                    th Rol
+                    th Validado
+                    th
+            tbody
+                each user in data
+                    tr
+                        td(data-label="ID") #{user.id}
+                        td(data-label="Primer Nombre") #{user.first_name}
+                        td(data-label="Primer Apellido") #{user.last_name}
+                        td(data-label="Username") #{user.user_name}
+                        td(data-label="Rol")= `${user.rol == 1 ?"Blogguer":"Comentarista"}`
+                        td(data-label="Validado")= `${user.validate == 1 ?"Con permiso":"Sin permiso"}`
+                        td.centrar-text.table-data-action
+                            a.table-action(href="#", title="Modificar", onclick=`openModalEdit(event, ${user.rol}, ${user.validate}, ${user.id});`)
+                                i.fa-regular.fa-pen-to-square
+    else
+        div.error-no-show
+            p No hay una lista de usuarios que mostrar.
+    div#modalEditPermission.overlay.closeWindowUser
+        div.popUp-user
+            form#formChangeUser.formulario-changeForUser(method="POST", action="#", encType="application/x-www-form-urlencoded")
+                input(type="hidden", name="id_user", id="id_user")
+                fieldset
+                    legend Asignando cambios al usuario
+                    div.formulario-changeForUser-select
+                        label(for="rol-user") Asignarle rol al usuario
+                        select(name="rol_slc", id="rol-user", required)
+                            option(value="1") Blogguer
+                            option(value="2") Comentarista
+                    div.formulario-changeForUser-content-radio
+                        p Darle acceso al usuario
+                        div.formulario-changeForUser-radio.mb1-5
+                            input(type="radio", name="validate", value="0", id="sin_acceso")
+                            label(for="sin_acceso") Sin acceso
+                        div.formulario-changeForUser-radio
+                            input(type="radio", name="validate", value="1", id="con_acceso")
+                            label(for="con_acceso") Con acceso
+                input#actionFormChangeUser.boton.formulario__send(type='submit' value='Enviar permisos')
+                a#closeModalEditPermission.boton.closePopUpUserAddStyle(href="#") Cerrar
+
+    script.
+        const modalEditPermission = document.querySelector("#modalEditPermission"),
+            closeModalEditPermission = document.querySelector("#closeModalEditPermission"),
+            actionFormChangeUser = document.querySelector("#actionFormChangeUser"),
+            formChangeUser = document.querySelector("#formChangeUser");
+
+        closeModalEditPermission.addEventListener("click", function(e){
+            e.preventDefault();
+            modalEditPermission.classList.toggle("closeWindowUser");
+        });    
+        function openModalEdit(event, rol, validate, idUser){
+            event.preventDefault();
+            let radios = document.querySelectorAll(".formulario-changeForUser input[type=radio]");
+            document.querySelector("#id_user").value = idUser;
+            document.querySelector("#rol-user").value = rol;
+            radios.forEach(function(radio){
+                if(radio.value == validate){
+                    console.log("Entro en el IF");
+                    radio.checked = true;
+                }else{
+                    console.log("Entro en el ELSE");
+                    radio.checked = false;
+                }
+            });
+            modalEditPermission.classList.toggle("closeWindowUser");
+        }
+        formChangeUser.addEventListener("submit", function(e){
+            e.preventDefault();
+            const formData = new FormData(formChangeUser);
+            /*console.log("Rol: "+formData.get("rol_slc"), "Validacion: "+formData.get("validate"), "ID USER: "+formData.get("id_user"));*/
+            fetch("/update-permissions-user", {
+                method: "POST",
+                body: formData
+            })
+                .then(data => data.json())
+                .then(result => console.log(result))
+                .catch(err => console.log(error));
+        })

@@ -3,20 +3,31 @@
     const inputPhotoPerfil = d.querySelector("#input-photo-perfil"),
         openFile = d.querySelector("#openFile"),
         formInputPhoto = d.querySelector("#formInputPhoto"),
-        spinnerContent = d.querySelector(".spinner-content");
+        spinnerContent = d.querySelector(".spinner-content"),
+        linkToMenuDash = d.querySelectorAll(".dashboard-navigation-link");
 
     let pathName = window.location.pathname;
-    if(pathName === '/home/dashboard'){
-        document.querySelector(".dashboard-navigation-link:nth-child(1)").classList.add("dashboard-navigation-link-active");
-    }else if(pathName === '/home/admin-site'){
-        document.querySelector(".dashboard-navigation-link:nth-child(2)").classList.add("dashboard-navigation-link-active");
-    }else if(pathName === '/home/adminBlog'){
-        document.querySelector(".dashboard-navigation-link:nth-child(3)").classList.add("dashboard-navigation-link-active");
-    }else if(pathName === '/home/users'){
-        document.querySelector(".dashboard-navigation-link:nth-child(4)").classList.add("dashboard-navigation-link-active");
-    }else{
-        document.querySelector(".dashboard-navigation-link").classList.remove("dashboard-navigation-link-active");
-    }
+    linkToMenuDash.forEach(function(item, i){
+        if(pathName === '/home/dashboard'){
+            (item.textContent == "Inicio")
+                ? item.classList.add("dashboard-navigation-link-active")
+                : item.classList.remove("dashboard-navigation-link-active")
+        }else if(pathName === '/home/admin-site'){
+            (item.textContent == "Editar Sitio")
+                ? item.classList.add("dashboard-navigation-link-active")
+                : item.classList.remove("dashboard-navigation-link-active")
+        }else if(pathName === '/home/adminBlog'){
+            (item.textContent == "Blog")
+                ? item.classList.add("dashboard-navigation-link-active")
+                : item.classList.remove("dashboard-navigation-link-active")
+        }else if(pathName === '/home/users'){
+            (item.textContent == "Usuarios")
+                ? item.classList.add("dashboard-navigation-link-active")
+                : item.classList.remove("dashboard-navigation-link-active")
+        }else{
+            linkToMenuDash.classList.remove("dashboard-navigation-link-active");
+        }
+    });
 
     openFile.addEventListener("click", function(e){
         e.preventDefault()
