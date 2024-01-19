@@ -17,3 +17,17 @@ block content
                 span.formulario__signug-link
                     | Don't Have An account 
                     a(href="/signup") Sign Up
+    //script.
+        const formLogin = document.querySelector("#login-form");
+
+        formLogin.addEventListener("submit", function(e){
+            e.preventDefault();
+            const formData = new FormData(formLogin);
+            fetch('/login', {
+                method: "POST",
+                body: formData
+            })
+                .then(data => data.json())
+                .then(result => console.log(result))
+                .catch(err => console.log(error));
+        });

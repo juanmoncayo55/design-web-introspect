@@ -207,13 +207,18 @@ app.post('/login', (req, res, next) => {
 		console.log(`Username: ${user_name}, Password: ${password}`);
 
 		//conn.query("SELECT id, first_name, last_name, user_name FROM users WHERE user_name = '"+user_name+"' AND password = '"+password+"' ", (err, data) => {
-		conn.query("SELECT id, first_name, last_name, user_name FROM users WHERE user_name = ? AND password = ?", [user_name, password], (err, data) => {
+		conn.query("SELECT id, first_name, last_name, user_name, validate, rol FROM users WHERE user_name = ? AND password = ?", [user_name, password], (err, data) => {
 			if(!err){
 				if(data.length){
-					console.log("Login user: ", data[0]);
-					req.session.userId = data[0].id;
-					req.session.user = data;
-					res.redirect('/home/dashboard');
+					//console.log(data);
+					if(data[0].validate === 1){
+						console.log("Login user: ", data[0]);
+						req.session.userId = data[0].id;
+						req.session.user = data;
+						res.redirect('/home/dashboard');
+					}else{
+						res.render('login', {message: "Tu cuenta aún no ha sido activada por el administrador, ponte en contacto con el para más información."});
+					}
 				}else{
 					console.log("Login Incorrect ", data)
 					res.render('login', {message: "Credenciales incorrectas"});
@@ -227,12 +232,12 @@ app.post('/login', (req, res, next) => {
 
 /****************--- DIRECCIONES PARA (DASHBOARD) ---****************/
 app.get('/home/admin-site', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		res.render('editSitePage', {title: "Sección para editar Landing Page", userLogued: req.session.user[0], menuSend: menuSend});
 	}else res.redirect('/login')
 });
 app.get('/home/admin-site/somos-edit-information', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		jsonfile.readFile(urlFileSomos, function (err, obj) {
 			if (err) console.error(err)
 			else{
@@ -242,13 +247,15 @@ app.get('/home/admin-site/somos-edit-information', (req, res, next) => {
 	}else res.redirect('/login')
 });
 app.post('/somos-information-edit', (req, res, next) => {
-	jsonfile.writeFile(urlFileSomos, req.body, function (err) {
-		if (!err) res.status(200).json({message: "Se edito correctamente el contenido."})
-		else console.error(err)
-	})
+	if(req.session.user.length && req.session.user[0].rol == 0){
+		jsonfile.writeFile(urlFileSomos, req.body, function (err) {
+			if (!err) res.status(200).json({message: "Se edito correctamente el contenido."})
+			else console.error(err)
+		});
+	}
 });
 app.get('/home/admin-site/administrator-users', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		req.getConnection((err, conn) => {
 			conn.query("SELECT id, first_name, last_name, user_name, rol, validate FROM users WHERE rol != 0 ORDER BY id DESC", (err, data) => {
 				if(!err){
@@ -265,12 +272,12 @@ app.get('/home/admin-site/administrator-users', (req, res, next) => {
 	}else res.redirect('/login')
 });
 app.get('/home/admin-site/administrator-post', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		res.render('administratorPost', {title: "Administrando publicaciones", userLogued: req.session.user[0], menuSend: menuSend});
 	}else res.redirect('/login')
 });
 app.get('/home/admin-site/administrator-email', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0], menuSend: menuSend});
 	}else res.redirect('/login')
 });
@@ -300,7 +307,7 @@ app.get('/home/dashboard', (req, res, next) => {
 	if(user == undefined){
 		res.redirect('/login');
 		return;
-	}else{
+	}else if(user.length){
 		console.log("Sesion en Login: ", req.session)
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM users WHERE id = ?", user[0].id, (err, data) => {
@@ -382,7 +389,7 @@ app.post('/edit-profile-user', (req, res, next) => {
 
 // View Users
 app.get('/home/users', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		req.getConnection((err, conn) => {
 
 			let paises;
@@ -407,7 +414,7 @@ app.get('/home/users', (req, res, next) => {
 
 // Edit user
 app.get('/home/edit-user/:id', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user && req.session.user[0].rol == 0){
 		req.getConnection((err, conn) => {
 			let id = req.params.id;
 
@@ -431,31 +438,33 @@ app.get('/home/edit-user/:id', (req, res, next) => {
 
 // Delete user
 app.get('/home/delete-user/:id', (req, res, next) => {
-	req.getConnection((err, conn) => {
-		let id = req.params.id;
-		conn.query("SELECT imagen_avatar FROM users WHERE id = ?", id, (err, data) => {
-			if(!err){
-				//Asignando nombre de la imagen
-				let nameOfImage = data[0].imagen_avatar;
-				//Eliminando imagen del servidor(de la carpeta donde se almacenan las imagenes)
-				fs.unlink(`${__dirname}/public/images/dashboard/${nameOfImage}`, function(err){
-					if (err) {
-						console.error(err);
-					  } else {
-						console.log('File is deleted.');
-					  }
-				});
-				conn.query("DELETE FROM users WHERE id = ?", id, (err, data) => {
-					if(err)
-						return next( new Error('Registro no Encontrado') );
-					else
-						res.redirect('/home/users')
-				});
-			}else console.log(err)
+	if(req.session.user.length && req.session.user[0].rol == 0){
+		req.getConnection((err, conn) => {
+			let id = req.params.id;
+			conn.query("SELECT imagen_avatar FROM users WHERE id = ?", id, (err, data) => {
+				if(!err){
+					//Asignando nombre de la imagen
+					let nameOfImage = data[0].imagen_avatar;
+					//Eliminando imagen del servidor(de la carpeta donde se almacenan las imagenes)
+					fs.unlink(`${__dirname}/public/images/dashboard/${nameOfImage}`, function(err){
+						if (err) {
+							console.error(err);
+						  } else {
+							console.log('File is deleted.');
+						  }
+					});
+					conn.query("DELETE FROM users WHERE id = ?", id, (err, data) => {
+						if(err)
+							return next( new Error('Registro no Encontrado') );
+						else
+							res.redirect('/home/users')
+					});
+				}else console.log(err)
+			});
+
+
 		});
-
-
-	});
+	}
 });
 // End - Delete user
 
@@ -463,79 +472,83 @@ app.get('/home/delete-user/:id', (req, res, next) => {
 app.post('/user-add', (req, res, next) => {
 	//console.log(req.files)
 	//console.log(req.body);
-	let photoPerfil, name_photo, uploadPath, id_user;
+	if(req.session.user.length && req.session.user[0].rol == 0){
+		let photoPerfil, name_photo, uploadPath, id_user;
 
-	let user = {
-		first_name: req.body.firstName_txt,
-		last_name: req.body.lastName_txt,
-		mob_no: req.body.mobileNumber_text,
-		user_name: req.body.nickname_txt,
-		password: req.body.password_psw,
-		email: req.body.email_txt,
-		country: req.body.pais_slc,
-		area_working: req.body.areaWorking_txt
-	}
-	req.getConnection((err, conn) => {
-		//Antes de agregar la informacion del usuario, realizo la verificacion de la subida del archivo.
-		if(!req.files || Object.keys(req.files).length == 0){
-			return res.status(400).json({message: "Ningun archivo fue cargado."});
+		let user = {
+			first_name: req.body.firstName_txt,
+			last_name: req.body.lastName_txt,
+			mob_no: req.body.mobileNumber_text,
+			user_name: req.body.nickname_txt,
+			password: req.body.password_psw,
+			email: req.body.email_txt,
+			country: req.body.pais_slc,
+			area_working: req.body.areaWorking_txt
 		}
-		photoPerfil = req.files.image_user_file;
-
-		conn.query('INSERT INTO users SET ?', user,(err, data) => {
-			if(err) res.status(500).json({error: "No se inserto el usuario"});
-			else{
-				name_photo = `${data.insertId}.webp`;
-
-				const convertImageToWebp = webp.cwebp(photoPerfil.tempFilePath, `/public/images/dashboard/${name_photo}`,"-q 70 -lossless");
-
-				uploadPath = __dirname + '/public/images/dashboard/' + name_photo;
-
-				photoPerfil.mv(uploadPath, (err) => {
-					if (err)
-					      return res.status(500).json(err);
-					else{
-						let id_profile = data.insertId;
-						req.getConnection((err, conn) =>{
-							conn.query("UPDATE users SET imagen_avatar = ? WHERE id = ?", [name_photo, data.insertId], (err, data) => {
-								if(err)
-									res.status(502).json({error: "Error en la Base de Datos"});
-								else{
-									res.status(200).json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
-								}
-							});
-						});
-					}
-				});
-
-				//res.status(200).json({message: "Se registro el usuario correctamente", data});
+		req.getConnection((err, conn) => {
+			//Antes de agregar la informacion del usuario, realizo la verificacion de la subida del archivo.
+			if(!req.files || Object.keys(req.files).length == 0){
+				return res.status(400).json({message: "Ningun archivo fue cargado."});
 			}
+			photoPerfil = req.files.image_user_file;
+
+			conn.query('INSERT INTO users SET ?', user,(err, data) => {
+				if(err) res.status(500).json({error: "No se inserto el usuario"});
+				else{
+					name_photo = `${data.insertId}.webp`;
+
+					const convertImageToWebp = webp.cwebp(photoPerfil.tempFilePath, `/public/images/dashboard/${name_photo}`,"-q 70 -lossless");
+
+					uploadPath = __dirname + '/public/images/dashboard/' + name_photo;
+
+					photoPerfil.mv(uploadPath, (err) => {
+						if (err)
+						      return res.status(500).json(err);
+						else{
+							let id_profile = data.insertId;
+							req.getConnection((err, conn) =>{
+								conn.query("UPDATE users SET imagen_avatar = ? WHERE id = ?", [name_photo, data.insertId], (err, data) => {
+									if(err)
+										res.status(502).json({error: "Error en la Base de Datos"});
+									else{
+										res.status(200).json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
+									}
+								});
+							});
+						}
+					});
+
+					//res.status(200).json({message: "Se registro el usuario correctamente", data});
+				}
+			});
 		});
-	});
+	}
 });
 // End - Add User
 
 // Edit permissions for Admin
 app.post('/update-permissions-user', (req, res, next) => {
-	req.getConnection((err, conn) => {
-		let u = {
-			id: req.body.id_user,
-			rol: req.body.rol_slc,
-			val: req.body.validate
-		};
-		conn.query("UPDATE users SET rol = ?, validate = ? WHERE id = ?;", [u.rol, u.validate, u.id], (err, data) => {
-			if(!err){
-				res.status(200).json({message: "Los permisos fueron cambiados correctamente."});
-			}else res.status(502).json({error: "No se pudo actualizar los Datos."});
+	if(req.session.user.length && req.session.user[0].rol == 0){
+		req.getConnection((err, conn) => {
+			let u = {
+				id: req.body.id_user,
+				rol: req.body.rol_slc,
+				val: req.body.validate
+			};
+			conn.query("UPDATE users SET rol = ?, validate = ? WHERE id = ?;", [u.rol, u.val, u.id], (err, data) => {
+				if(!err){
+					res.status(200).json({message: "Los permisos fueron cambiados correctamente."});
+				}else res.status(502).json({error: "No se pudo actualizar los Datos."});
+			});
 		});
-	});
+	}
 });
 // End - Edit permissions for Admin
 
 /****************--- DIRECCIONES PARA BLOG'S (DASHBOARD) ---****************/
 // Blog
 app.get('/home/adminBlog', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user  && req.session.user[0].rol != 2){
 		/*let posts;
 		req.getConnection((err, conn) => {
 			conn.query("SELECT * FROM post WHERE user_id = ?", req.session.userId, (err, data) => {
@@ -570,48 +583,50 @@ app.get('/home/adminBlog', (req, res, next) => {
 
 //app.get('/new-post', (req, res, next) => {});
 app.post('/new-post', (req, res, next) => {
-	req.getConnection((err, conn) => {
-		let photoPost, name_photo, uploadPath;
-		if(!req.files || Object.keys(req.files).length == 0){
-			return res.status(400).json({error: "Ningun archivo fue cargado."});
-		}
-
-		photoPost = req.files.image_post;
-		name_photo = `${uuidv4()}.webp`;
-		webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
-		uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
-
-		photoPost.mv(uploadPath, (err) => {
-			if (err)
-				  return res.status(500).json(err);
-			else{
-				req.getConnection((err, conn) =>{
-					let post = {
-						title: req.body.title_txt,
-						brief: req.body.brief_txt,
-						content: req.body.content_txt,
-						image: name_photo,
-						status: req.body.status,
-						category_id: req.body.category_slc,
-						user_id: req.body.idUser
-					};
-					conn.query('INSERT INTO post SET ?', post, (err, data) => {
-						if(err)
-							res.status(500).json({error: "No se pudo insertar el post, hubo un error en la BD"});
-						else{
-							res.status(200).json({message: "Se ha insertado con exito el post"});
-						}
-					});
-				});
+	if(req.session.user.length && req.session.user[0].rol != 2){
+		req.getConnection((err, conn) => {
+			let photoPost, name_photo, uploadPath;
+			if(!req.files || Object.keys(req.files).length == 0){
+				return res.status(400).json({error: "Ningun archivo fue cargado."});
 			}
+
+			photoPost = req.files.image_post;
+			name_photo = `${uuidv4()}.webp`;
+			webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
+			uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
+
+			photoPost.mv(uploadPath, (err) => {
+				if (err)
+					  return res.status(500).json(err);
+				else{
+					req.getConnection((err, conn) =>{
+						let post = {
+							title: req.body.title_txt,
+							brief: req.body.brief_txt,
+							content: req.body.content_txt,
+							image: name_photo,
+							status: req.body.status,
+							category_id: req.body.category_slc,
+							user_id: req.body.idUser
+						};
+						conn.query('INSERT INTO post SET ?', post, (err, data) => {
+							if(err)
+								res.status(500).json({error: "No se pudo insertar el post, hubo un error en la BD"});
+							else{
+								res.status(200).json({message: "Se ha insertado con exito el post"});
+							}
+						});
+					});
+				}
+			});
 		});
-	});
+	}
 });
 // End - Insert a new Post
 
 // View section edit post
 app.get('/home/edit-post/:id', (req, res, next) => {
-	if(req.session.user){
+	if(req.session.user  && req.session.user[0].rol != 2){
 		let idPost = req.params.id;
 		let categories;
 
@@ -643,86 +658,90 @@ app.get('/home/edit-post/:id', (req, res, next) => {
 app.post('/edit-post', (req, res, next) => {
 	//console.log(req.body);
 	//console.log(req.files);
-	let photoPost, name_photo, uploadPath;
-	let postId = req.body.idPost;
-	let post = {
-		title: req.body.title_txt,
-		brief: req.body.brief_txt,
-		content: req.body.content_txt,
-		status: req.body.status,
-		category_id: req.body.category_slc
-	}
-	name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}.webp`;
-	req.getConnection((err, conn) =>{
-
-
-		if(req.files){
-			photoPost = req.files.image_post;
-			//name_photo = path.parse(req.body.name_image_post).name;
-			//name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}`;
-			name_photo = `${req.body.name_image_post}`;
-
-			const convertImageToWebp = webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
-
-			uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
-
-			photoPost.mv(uploadPath, (errorImage) => {
-				if (!errorImage){
-					console.log("Se subio la imagen")
-					/*conn.query("UPDATE post SET image = ? WHERE id = ?", [name_photo, postId], (error, data) => {
-						if(error)
-							res.status(502).json({error: "Error en la Base de Datos"});
-						else{
-							res.json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
-						}
-					});*/
-				}
-			});
+	if(req.session.user.length && req.session.user[0].rol != 2){
+		let photoPost, name_photo, uploadPath;
+		let postId = req.body.idPost;
+		let post = {
+			title: req.body.title_txt,
+			brief: req.body.brief_txt,
+			content: req.body.content_txt,
+			status: req.body.status,
+			category_id: req.body.category_slc
 		}
-	});
-	req.getConnection((err, conn) => {
-		conn.query('UPDATE post SET ? WHERE id = ?', [{...post, image: name_photo}, postId], (err, data) => {
-			if(err)
-				res.status(500).json({error: "Hubo un error en la Base de Datos, vuelve a intentarlo ,ás tarde", err});
-			else{
-				res.json({success: "Se ha actualizado con exito el Post"});
+		name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}.webp`;
+		req.getConnection((err, conn) =>{
+
+
+			if(req.files){
+				photoPost = req.files.image_post;
+				//name_photo = path.parse(req.body.name_image_post).name;
+				//name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}`;
+				name_photo = `${req.body.name_image_post}`;
+
+				const convertImageToWebp = webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
+
+				uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
+
+				photoPost.mv(uploadPath, (errorImage) => {
+					if (!errorImage){
+						console.log("Se subio la imagen")
+						/*conn.query("UPDATE post SET image = ? WHERE id = ?", [name_photo, postId], (error, data) => {
+							if(error)
+								res.status(502).json({error: "Error en la Base de Datos"});
+							else{
+								res.json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
+							}
+						});*/
+					}
+				});
 			}
 		});
-	});
+		req.getConnection((err, conn) => {
+			conn.query('UPDATE post SET ? WHERE id = ?', [{...post, image: name_photo}, postId], (err, data) => {
+				if(err)
+					res.status(500).json({error: "Hubo un error en la Base de Datos, vuelve a intentarlo ,ás tarde", err});
+				else{
+					res.json({success: "Se ha actualizado con exito el Post"});
+				}
+			});
+		});
+	}
 });
 // End - Edit post
 
 // Delete Post of blog
 app.get('/home/delete-post/:id', (req, res, next) => {
-	req.getConnection((err, conn) => {
-		let id = req.params.id;
-		conn.query("SELECT image FROM post WHERE id = ?", id, (err, data) => {
-			if(!err){
-				//Asignando nombre de la imagen
-				let nameOfImage = data[0].image;
-				//Eliminando imagen del servidor(de la carpeta donde se almacenan las imagenes)
-				fs.unlink(`${__dirname}/public/images/dashboard/post/${nameOfImage}`, function(err){
-					if (err) {
-					    console.error(err);
-					  } else {
-					    console.log('File is deleted.');
-					  }
-				});
-				conn.query("DELETE FROM post WHERE id = ?", id, (err, data) => {
-					if(err)
-						return next( new Error('Registro no Encontrado') );
-					else
-						res.redirect('/home/adminBlog')
-				});
-			}
+	if(req.session.user.length && req.session.user[0].rol != 2){
+		req.getConnection((err, conn) => {
+			let id = req.params.id;
+			conn.query("SELECT image FROM post WHERE id = ?", id, (err, data) => {
+				if(!err){
+					//Asignando nombre de la imagen
+					let nameOfImage = data[0].image;
+					//Eliminando imagen del servidor(de la carpeta donde se almacenan las imagenes)
+					fs.unlink(`${__dirname}/public/images/dashboard/post/${nameOfImage}`, function(err){
+						if (err) {
+						    console.error(err);
+						  } else {
+						    console.log('File is deleted.');
+						  }
+					});
+					conn.query("DELETE FROM post WHERE id = ?", id, (err, data) => {
+						if(err)
+							return next( new Error('Registro no Encontrado') );
+						else
+							res.redirect('/home/adminBlog')
+					});
+				}
+			});
+			/*conn.query("DELETE FROM post WHERE id = ?", id, (err, data) => {
+				if(err)
+					return next( new Error('Registro no Encontrado') );
+				else
+					res.redirect('/home/blog')
+			});*/
 		});
-		/*conn.query("DELETE FROM post WHERE id = ?", id, (err, data) => {
-			if(err)
-				return next( new Error('Registro no Encontrado') );
-			else
-				res.redirect('/home/blog')
-		});*/
-	});
+	}
 });
 // End - Delete Post of blog
 

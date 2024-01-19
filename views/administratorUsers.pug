@@ -30,7 +30,7 @@ block content
                         td(data-label="Primer Nombre") #{user.first_name}
                         td(data-label="Primer Apellido") #{user.last_name}
                         td(data-label="Username") #{user.user_name}
-                        td(data-label="Rol")= `${user.rol == 1 ?"Blogguer":"Comentarista"}`
+                        td(data-label="Rol")= `${user.rol == 1 ?"Blogguer": user.rol == 2 ? "Comentarista" : "Sin rol"}`
                         td(data-label="Validado")= `${user.validate == 1 ?"Con permiso":"Sin permiso"}`
                         td.centrar-text.table-data-action
                             a.table-action(href="#", title="Modificar", onclick=`openModalEdit(event, ${user.rol}, ${user.validate}, ${user.id});`)
@@ -49,6 +49,7 @@ block content
                         select(name="rol_slc", id="rol-user", required)
                             option(value="1") Blogguer
                             option(value="2") Comentarista
+                            option(value="3") Sin rol
                     div.formulario-changeForUser-content-radio
                         p Darle acceso al usuario
                         div.formulario-changeForUser-radio.mb1-5
