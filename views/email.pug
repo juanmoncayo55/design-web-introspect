@@ -1,0 +1,25 @@
+html(style="font-family: sans-serif;font-size: 16px;")
+    head
+        meta(http-equiv = 'Content-Type', content = 'text/html; charset=UTF-8')
+        title= subject
+    body
+        div.contenedor-email
+            div.email-header(style="width: 90%;margin: 0 auto;max-width: 50rem;text-align: center;padding: 2rem 0;")
+                img.email-header__img(src="https://i.ibb.co/VHPnJT0/introspect-logo.png" style="    width: 193px;display: block;margin: 0 auto;margin-bottom: 1.8rem;")
+                div.email-header__nav(style="display: flex;justify-content: center;-webkit-justify-content: center;-ms-justify-content: center;-o-justify-content: center;column-gap: 1.5rem;")
+                    a.email-header__nav-a(href="#" style="color: #212121;font-size: 1.1rem;text-decoration: none;") Inicio
+                    a.email-header__nav-a(href="#" style="color: #212121;font-size: 1.1rem;text-decoration: none;") Somos
+                    a.email-header__nav-a(href="#" style="color: #212121;font-size: 1.1rem;text-decoration: none;") Blog
+                    a.email-header__nav-a(href="#" style="color: #212121;font-size: 1.1rem;text-decoration: none;") Contacto
+            section.email-banner(style="background-image: url('https://i.ibb.co/WP5VmTf/banner.jpg');background-size: cover;background-repeat: no-repeat;background-position: center 41%;height: 18rem;width: 90%;margin: 0 auto;max-width: 50rem;padding: 4rem 0;box-sizing: border-box;")
+                h2.email-banner__h2(style="font-weight: normal;letter-spacing: 3px;font-size: 1.4rem;line-height: normal;color: #FFF;text-shadow: 1px 1px 3px #000000;text-align:center;")
+                    | Introspect: 
+                    span.email-banner__span(style="font-weight: normal;")
+                    | A free + Fully Responsive
+                    br
+                    | Site Template By Templated
+                a.email-banner__link(href='#' style="text-decoration:none;color: #FFF;border: 1px solid #FFF;font-weight: bold;padding: 1rem 3rem;transition: .3s all ease-in-out;cursor: pointer;display: block;width: fit-content;margin: 0 auto;margin-top: 1rem;") Get Started
+            h1.email-title(style="width: 90%;margin: 1rem auto;max-width: 50rem;text-align:left;font-size:1.2rem;color:#212121;")= subject
+            p.email-subject(style="width: 90%;margin: 0 auto;max-width: 50rem;text-align:left;font-size:1rem;color:#212121;margin-top: 2rem;")= otherProperty
+
+            p(style="margin-top:2rem;text-align:center;color:#ea4335;font-size:.9rem;font-weight:bold;padding: 0.5rem;") Por favor no reenviar mensajes al emisor del correo.

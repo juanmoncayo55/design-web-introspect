@@ -54,15 +54,47 @@ block content
 	footer.footer
 		.contenedor
 			h3.footer__title Get in touch
-			form.formulario
+			form.formulario(method="POST", id="formulario-send-email")
 				.campo
 					label.campo__label(for='name') Name
-					input#name.campo__input(type='text' autocomplete='off')
+					input#name.campo__input(type='text', name="name", autocomplete='off')
 				.campo
 					label.campo__label(for='email') Email
-					input#email.campo__input(type='email' autocomplete='off')
+					input#email.campo__input(type='email', name="email", autocomplete='off')
 				.campo.campo-textarea
 					label.campo__label(for='message') Message
-					textarea#message.campo__input.campo__input--textarea
+					textarea#message.campo__input.campo__input--textarea(name="message")
 				input.boton.formulario__send(type='submit' value='Send message')
 				p.formulario-text &copy; Untitled Design: TEMPLATED. Images Unsplash
+	div.message-form-email
+		span Se envio el correo correctamente
+	script.
+		const formSendEmail = document.querySelector("#formulario-send-email");
+		const btnSend = document.querySelector("#formulario-send-email .boton.formulario__send");
+		const messageFormEmail = document.querySelector(".message-form-email");
+		formSendEmail.addEventListener("submit", function(e){
+			e.preventDefault();
+			const formData = new FormData(formSendEmail);
+			btnSend.setAttribute("disabled", true);
+			fetch('/send-email', {
+				method: "POST",
+				body: formData
+			})
+				.then(result => result.json())
+				.then(data => {
+					console.log(data)
+					if(data.message){
+						messageFormEmail.style.animationName = "toMiddleMessage";
+						messageFormEmail.style.animationDuration = ".5s";
+						messageFormEmail.style.animationIterationCount = "1";
+						messageFormEmail.style.animationTimingFunction = "linear";
+						messageFormEmail.style.animationFillMode = "forwards";
+						formSendEmail.reset();
+						setTimeout(function(){
+							btnSend.setAttribute("disabled", false);
+							messageFormEmail.style.animationName = "toMiddleMessageHide";
+						}, 4000);
+					}
+				})
+				.catch(error => console.log(error));
+		});

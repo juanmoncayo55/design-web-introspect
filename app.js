@@ -29,6 +29,18 @@ const { v4: uuidv4 } = require('uuid');
 
 let app = express();
 
+const mailer = require('express-mailer');
+mailer.extend(app, {
+  form: 'juanmoriones012@gmail.com',
+  host: 'smtp.gmail.com', // hostname
+  secureConnection: true, // use SSL
+  port: 465, // port for secure SMTP
+  transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+  auth: {
+	user: 'juansebastianmoriones@unimayor.edu.co',
+	pass: 'rvac fstz pxgn nxew'
+  }
+});
 //app.use(fileUpload);
 
 app.set('views', viewDir);
@@ -782,6 +794,27 @@ app.get('/home/logout', (req, res, next) => {
 });
 // End - Logout
 
+app.post('/send-email', (req, res, next) => {
+	app.mailer.send({
+		template: 'email',
+		cc: req.body.email
+		}, {
+		to: 'juansebastianmoriones@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field.
+		subject: req.body.name, // REQUIRED.
+		otherProperty: req.body.message
+	}, function (err) {
+		if (err) {
+			// handle error
+			console.log(err);
+			res.send('There was an error sending the email');
+			return;
+		}else{
+			console.log(req.body);
+			res.status(200).json({message: "Se envio el correo correctamente!!!"});
+		}
+	});
+});
+app.get("/email", (req, res, next) => res.render('email'));
 // Page Not Found (404)
 app.use((req, res, next) => {
 	let err = new Error();
