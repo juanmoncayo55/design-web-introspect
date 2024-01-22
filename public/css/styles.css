@@ -1540,6 +1540,10 @@ font-size: 2.6rem;
 .comments-comment__content-header-heart i:hover{
 	color: #ff6b6f;
 }
+.comments-comment__content-header-heart.liked i{
+	color: #e5474b;
+	transform: scale(1.25);
+}
 .comments-comment__content-header-c span{
     padding-right: 0.5rem;
     font-size: 1.7rem;
