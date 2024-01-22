@@ -1475,6 +1475,93 @@ font-size: 2.6rem;
 	font-family: FontAwesome;
 	margin-right: 0.5rem;
 }
+.comments-contenedor{
+    flex: 0 1 65%;
+	background-color: #f8f9fa;
+	border: 1px solid #b6b6b6;
+	border-radius: .5rem;
+	padding: 1.8rem;
+}
+.form-comments{margin-bottom: 4rem;}
+.form-comments-div{}
+.form-comments-div__input, .form-comments-div__textarea{
+	color: #212121;
+	resize: none;
+    outline: none;
+    width: 100%;
+    padding: 0.8rem;
+	font-size: 1.7rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #bdbdbd;
+}
+.form-comments-div__textarea{min-height: 110px;margin-bottom:0;}
+.form-comments input[type=submit]{
+	background-color: var(--primario);
+    border-radius: 0.5rem;
+	transition: .3s all ease-in-out;
+}
+.form-comments input[type=submit]:hover{
+	background-color: #ff575b;
+}
+.comments-comment{
+	display: flex;
+    column-gap: 2rem;
+    width: 95%;
+    line-height: normal;
+	margin-bottom: 2.4rem;
+}
+.comments-comment:last-child{margin-bottom: 0;}
+.comments-comment__avatar{border-radius: 50%;}
+.comments-comment__content{
+	border-bottom: 1px solid #bdbdbd;
+	padding-bottom: 1rem;
+	flex: 1;
+}
+.comments-comment:last-child .comments-comment__content{
+	border-bottom: none;
+	padding-bottom: 0;
+}
+.comments-comment__content-header{
+	margin-bottom: 0.8rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.comments-comment__content-header-title{
+	font-size: 1.95rem;
+    display: block;
+}
+.comments-comment__content-header-heart i {
+	color: gray;
+	transform-origin: center;
+	transition: .2s all ease-in-out;
+}
+.comments-comment__content-header-heart i:hover{
+	color: #ff6b6f;
+}
+.comments-comment__content-header-c span{
+    padding-right: 0.5rem;
+    font-size: 1.7rem;
+    color: #8e8e8e;
+}
+.comments-comment__content-text{
+	font-size: 1.7rem;
+	line-height: 2.5rem;
+}
+.message-of-comment{
+	color: #ffffff;
+    background-color: #4CAF50;
+    line-height: normal;
+    font-size: 1.8rem;
+    text-align: center;
+    padding: 0.4rem;
+    margin: 0 auto;
+    margin-top: 1rem;
+    width: 50%;
+    border-radius: 1rem 0 1rem 0;
+    font-weight: bold;
+}
 @media (max-width: 900px){
 	.blog-item__presentation{
 		flex-direction: column;
@@ -1508,6 +1595,8 @@ font-size: 2.6rem;
 	display: flex;
     justify-content: space-between;
     column-gap: 3rem;
+	flex-wrap: wrap;
+	margin-bottom: 5rem;
 }
 .postOfBlog-content{
 	flex: 0 1 65%;

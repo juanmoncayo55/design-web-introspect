@@ -71,3 +71,7 @@ FOREIGN KEY (post_id) REFERENCES post(id);
 SELECT id, first_name, last_name, user_name, rol, validate FROM users WHERE rol != 0 ORDER BY id DESC;
 /*Comando para editar los permisos de los usuarios*/
 UPDATE users SET rol = ?, validate = ? WHERE id = ?;
+/*Comando para traer los comentarios de un usuario*/
+SELECT comment.name, comment.comment, comment.email, comment.created_at, comment.liked, users.first_name, users.last_name, users.imagen_avatar FROM comment INNER JOIN post ON post.id = comment.post_id INNER JOIN users ON post.user_id = users.id WHERE users.id = 6
+/*Comando para traer todos los comentarios*/
+SELECT comment.name, comment.comment, comment.email, comment.created_at, comment.liked, users.first_name, users.last_name, users.imagen_avatar FROM comment INNER JOIN post ON post.id = comment.post_id INNER JOIN users ON comment.email = users.email WHERE comment.post_id = 29 ORDER BY comment.created_at DESC;

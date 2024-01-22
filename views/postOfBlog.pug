@@ -31,11 +31,121 @@ block content
                                 a(href="#") Analisis de Datos
                             li.fline-height
                                 a(href="#") Ingenieria de Software
+                div.comments-contenedor
+                    if(user)
+                        form#formComments.form-comments(action="/add-comment-of-blog", method="POST")
+                            input(type="hidden", name="idPost", value=post.id)
+                            div.form-comments-div
+                                input.form-comments-div__input(type="text", name="title_comment", placeholder="Título del comentario", required)
+                            div.form-comments-div
+                                textarea.form-comments-div__textarea(name="message_comment", placeholder="Escribe tu comentario", required)
+                            div.form-comments-div
+                                input.boton(type="submit", value="Enviar", name="send_comment")
+                    //each post in [1,2,3,4,5]
+                        div.comments-comment
+                            img.comments-comment__avatar(src="/images/avatarComment50x50.jpg", width="50", height="50")
+                            div.comments-comment__content
+                                div.comments-comment__content-header
+                                    strong.comments-comment__content-header-title Commenter Name
+                                    a.comments-comment__content-header-heart(href="#")
+                                        i.fas.fa-heart
+                                p.comments-comment__content-text If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
         else
             div.message-posts
                 p.message-posts_text ¿Estas pérdido? vuelve al <a href="/">Inicio</a>
                 i.fas.fa-flushed
     script.
-        const parraphDate = document.querySelector(".postOfBlog-content__date-publish");
+        const parraphDate = document.querySelector(".postOfBlog-content__date-publish"),
+            formComments = document.querySelector("#formComments"),
+            commentsContenedor = document.querySelector(".comments-contenedor"),
+            pShowMessage = document.createElement("P"),
+            likedCommentHeart = document.querySelector("#likedCommentHeart");
         let date = moment(parraphDate.dataset.date);
         parraphDate.innerHTML = "Publicado en: " + date.locale('es').format("MMMM DD, YYYY - h:mm:ss a");
+        pShowMessage.classList.add("message-of-comment");
+
+        if(formComments != null){
+            formComments.addEventListener("submit", function(e){
+                e.preventDefault();
+                formComments.appendChild(pShowMessage);
+                const formData = new FormData(formComments);
+                fetch('/add-comment-of-blog',{
+                    method: "POST",
+                    body: formData
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        console.log(data)
+                        pShowMessage.innerHTML = "Se agrego el comentario.";
+                        setTimeout(function(){
+                            pShowMessage.remove();
+                        }, 3000);
+                    })
+                    .catch(err => {
+                        pShowMessage.remove();
+                        console.log(err)
+                    });
+            });
+        }
+        fetch('/getAllComments/'+#{post.id})
+            .then(result => result.json())
+            .then(data => {
+                if(data.comments.length > 0){
+                    data["comments"].forEach(function(comment){
+                        commentsContenedor.insertAdjacentHTML('beforeend',`<div class="comments-comment">
+                                <img class="comments-comment__avatar" src="/images/dashboard/${comment.imagen_avatar}" width="50" height="50" />
+                                <div class="comments-comment__content">
+                                    <div class="comments-comment__content-header">
+                                        <strong class="comments-comment__content-header-title">${comment.name}</strong>
+                                        <div class="comments-comment__content-header-c">
+                                            <span>200</span>
+                                            <a class="comments-comment__content-header-heart" onclick="changeValueLiked(event, ${comment.id})" href="#" id="likedCommentHeart" data-like="">
+                                                <i class="fas fa-heart"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <p class="comments-comment__content-text">${comment.comment}</p>
+                                </div>
+                            </div>`);
+                    });
+                }else{
+                    commentsContenedor.insertAdjacentHTML('beforeend', "<p>Aún no hay comentarios haz tu el primer comentario</p>");
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            });
+
+        const requestLikeOrDislike = (value, commentId) => {
+            const formData = new FormData();
+                formData.append("value", value);
+                formData.append("id_comment", commentId);
+            fetch("/sum-liked-comment", {
+                method: "POST",
+                body: formData
+            })
+                .then(result => result.json())
+                .then(data => console.log(data))
+                .catch(error => console.log(error));
+        }
+
+        let like = false;
+        function changeValueLiked(e, commentId){
+            e.preventDefault();
+            //let a = 0;
+            if(Boolean(e.srcElement.parentElement.dataset.like) == Boolean(false) || like == false){
+                e.srcElement.parentElement.dataset.like = "true";
+                like = true;
+                requestLikeOrDislike("sumar", commentId);
+                e.target.style.color = "#e5474b";
+                e.target.style.transform = "scale(1.25)";
+            }else if(Boolean(e.srcElement.parentElement.dataset.like) == Boolean(true) || like == true){
+                e.srcElement.parentElement.dataset.like = "false";
+                //a = 0;
+                //console.log("Valor: ", Boolean(e.srcElement.parentElement.dataset.like) == false)
+                like = false;
+                requestLikeOrDislike("restar", commentId);
+                e.target.style.color = "revert-layer";
+                e.target.style.transform = "scale(1)";
+            }
+        }
