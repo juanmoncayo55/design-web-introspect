@@ -494,6 +494,10 @@ img{max-width: 100%;}
 	.read-articles__article:first-child, .read-articles__article:last-child{
 		padding: 3rem 0;
 	}
+	.formulario-text{
+		display: block;
+	    margin-top: 2rem;
+	}
 }
 /* Formulario de Alta */
 .signup{

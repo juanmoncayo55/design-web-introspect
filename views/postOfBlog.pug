@@ -99,10 +99,10 @@ block content
                                     <div class="comments-comment__content-header">
                                         <strong class="comments-comment__content-header-title">${comment.name}</strong>
                                         <div class="comments-comment__content-header-c">
-                                            ${(comment.liked > 0)
+                                             ${(comment.liked > 0)
                                                 ? '<a class="comments-comment__content-header-heart liked" onclick="changeValueNoLiked(event, '+comment.id+')" href="#" id="likedCommentHeart" data-like=""><i class="fas fa-heart"></i></a>'
                                                 : '<a class="comments-comment__content-header-heart" onclick="changeValueLiked(event, '+comment.id+')" href="#" id="likedCommentHeart" data-like=""><i class="fas fa-heart"></i></a>'
-                                            }
+                                             }
                                         </div>
                                     </div>
                                     <p class="comments-comment__content-text">${comment.comment}</p>
@@ -133,22 +133,30 @@ block content
 
         let like = false;
         function changeValueLiked(event, commentId){
-            event.preventDefault();
-            //console.log(event.srcElement.parentElement.style.color);
-            event.srcElement.parentElement.dataset.like = "true";
-            like = true;
-            event.target.style.color = "#e5474b";
-            event.target.style.transform = "scale(1.25)";
-            requestLikeOrDislike("sumar", commentId);
-            event.srcElement.parentElement.setAttribute('onclick', `changeValueNoLiked(event, ${commentId})`)
+            if(#{loggued}){
+                event.preventDefault();
+                //console.log(event.srcElement.parentElement.style.color);
+                event.srcElement.parentElement.dataset.like = "true";
+                like = true;
+                event.target.style.color = "#e5474b";
+                event.target.style.transform = "scale(1.25)";
+                requestLikeOrDislike("sumar", commentId);
+                event.srcElement.parentElement.setAttribute('onclick', `changeValueNoLiked(event, ${commentId})`)
+            }else{
+                window.location.pathname = '/login';
+            }
         }
         function changeValueNoLiked(event, commentId){
-            event.preventDefault();
-            console.log(event.srcElement.parentElement.style.color);
-            event.srcElement.parentElement.dataset.like = "false";
-            like = false;
-            requestLikeOrDislike("restar", commentId);
-            event.target.style.color = "gray";
-            event.target.style.transform = "scale(1)";
-            event.srcElement.parentElement.setAttribute('onclick', `changeValueLiked(event, ${commentId})`)
+            if(#{loggued}){
+                event.preventDefault();
+                console.log(event.srcElement.parentElement.style.color);
+                event.srcElement.parentElement.dataset.like = "false";
+                like = false;
+                requestLikeOrDislike("restar", commentId);
+                event.target.style.color = "gray";
+                event.target.style.transform = "scale(1)";
+                event.srcElement.parentElement.setAttribute('onclick', `changeValueLiked(event, ${commentId})`)
+            }else{
+                window.location.pathname = '/login';
+            }
         }

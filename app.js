@@ -815,26 +815,28 @@ app.get("/getAllComments/:idPost", (req, res, next) => {
 });
 app.post('/sum-liked-comment', (req, res, next) => {
 	//console.log(req.body)
-	req.getConnection((err, conn) => {
-		if(req.body.value == "sumar"){
-			conn.query("UPDATE comment SET comment.liked = comment.liked + 1 WHERE id = ?", req.body.id_comment, (err, data) => {
-				if(!err){
-					console.log(data)
-					res.status(200).json({message: "Haz dado me gusta"})
-				}
-				else{ console.log(err);res.status(500).json({message: "Hubo un error"})}
-			});
-		}else if(req.body.value == "restar"){
-			conn.query("UPDATE comment SET comment.liked = comment.liked - 1 WHERE id = ?", req.body.id_comment, (err, data) => {
-				if(!err){
-					console.log(data)
-					res.status(200).json({message: "Haz un NO me gusta"})
-				}
-				else{ console.log(err);res.status(500).json({message: "Hubo un error"})}
-			});
-		}
-		if(err) console.log(err)
-	});
+	if(req.session.user){
+		req.getConnection((err, conn) => {
+			if(req.body.value == "sumar"){
+				conn.query("UPDATE comment SET comment.liked = comment.liked + 1 WHERE id = ?", req.body.id_comment, (err, data) => {
+					if(!err){
+						console.log(data)
+						res.status(200).json({message: "Haz dado me gusta"})
+					}
+					else{ console.log(err);res.status(500).json({message: "Hubo un error"})}
+				});
+			}else if(req.body.value == "restar"){
+				conn.query("UPDATE comment SET comment.liked = comment.liked - 1 WHERE id = ?", req.body.id_comment, (err, data) => {
+					if(!err){
+						console.log(data)
+						res.status(200).json({message: "Haz un NO me gusta"})
+					}
+					else{ console.log(err);res.status(500).json({message: "Hubo un error"})}
+				});
+			}
+			if(err) console.log(err)
+		});
+	}else res.status(403).json({message: "403 No has iniciado sesión"});
 });
 // End- Comments Of Blog
 
