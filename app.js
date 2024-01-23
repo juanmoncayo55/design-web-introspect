@@ -81,7 +81,7 @@ const urlFileSomos = `${__dirname}/textSomos.json`;
 /****************--- DIRECCIONES PARA Pàginas de LadingPage ---****************/
 // Index(Home)
 app.get('/', (req, res, next) => {
-	res.render('index', {title: "Introspect"});
+	res.render('index', {title: "Introspect", loggued: req.session.user != undefined ? true : false});
 });
 // End - Index(Home)
 // Páginas
@@ -89,7 +89,7 @@ app.get('/somos', (req, res, next) => {
 	jsonfile.readFile(urlFileSomos, function (err, obj) {
 		if (err) console.error(err)
 		else{
-			res.render('somos', {title: "Quienes Somos - Introspect", obj})
+			res.render('somos', {title: "Quienes Somos - Introspect", obj, loggued: req.session.user != undefined ? true : false})
 		}
 	})
 });
@@ -99,7 +99,7 @@ app.get('/blog', (req, res, next) => {
 		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, post.user_id, category.name AS 'nombre_categoria', users.user_name AS 'nombre_usuario' FROM post INNER JOIN category ON post.category_id = category.id INNER JOIN users ON post.user_id = users.id WHERE post.status = 0 AND post.validate = 1 ORDER BY post.created_at DESC", (err, data) => {
 			if(err)
 				res.status(502).json({error: "No se logró traer la información de la base de datos, hubo un error en el gestor de base de datos."});
-			else res.render('blog', {title: "Sección de Blog - Introspect", posts: data});
+			else res.render('blog', {title: "Sección de Blog - Introspect", posts: data, loggued: req.session.user != undefined ? true : false});
 		});
 	});
 });
@@ -114,12 +114,12 @@ app.get('/blog/:id', (req, res, next) => {
 		conn.query("SELECT post.id, post.title, post.brief, post.content, post.image, post.created_at, post.status, post.category_id, category.name AS 'nombre_categoria' FROM post INNER JOIN category ON post.category_id = category.id WHERE post.id = ? AND post.validate = 1", idPost, (err, data) => {
 			if(err)
 				res.status(502).json({error: "No se logró traer la información de la base de datos, hubo un error en el gestor de base de datos."});
-			else res.render('postOfBlog', {title: "Sección de Blog - Introspect", post: data[0], user: (req.session.user != null)?true:false});
+			else res.render('postOfBlog', {title: "Sección de Blog - Introspect", post: data[0], user: (req.session.user != null)?true:false, loggued: req.session.user != undefined ? true : false});
 		});
 	});
 });
 app.get('/contactanos', (req, res, next) => {
-	res.render('contactanos', {title: "Contactanos - Introspect"});
+	res.render('contactanos', {title: "Contactanos - Introspect", loggued: req.session.user != undefined ? true : false});
 });
 // End - Páginas
 
@@ -128,7 +128,7 @@ app.get('/contactanos', (req, res, next) => {
 app.get('/signup', (req, res, next) => {
 	(req.session.user)
 		? res.redirect('/home/dashboard')
-		: res.render('signup', {title: "Formulario de Registro", message: null})
+		: res.render('signup', {title: "Formulario de Registro", message: null, loggued: req.session.user != undefined ? true : false})
 
 	console.log("/signup session: ", req.session);
 });
@@ -210,7 +210,7 @@ app.post('/upload-image', (req, res, next) => {
 app.get('/login', (req, res, next) => {
 	(req.session.user)
 		? res.redirect('/home/dashboard')
-		: res.render('login', {title: "Inicio de sesión"});
+		: res.render('login', {title: "Inicio de sesión", loggued: req.session.user != undefined ? true : false});
 });
 app.post('/login', (req, res, next) => {
 	req.getConnection((err, conn) => {

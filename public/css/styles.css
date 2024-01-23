@@ -355,6 +355,7 @@ img{max-width: 100%;}
 .read-articles__title{
 	color: var(--primario);
 	text-transform: uppercase;
+    margin-bottom: 1.1rem;
 }
 .read-articles__imagen img{
 	width: 100%;
@@ -487,11 +488,11 @@ img{max-width: 100%;}
 }
 /* Eliminando paddings en pantallas pequeñas */
 @media (max-width: 780px) {
-	.entrada, .services{
+	.entrada, .services, .footer{
 		padding: 3rem 0;
 	}
-	.read-articles__article, .footer{
-		padding: 0 0;
+	.read-articles__article:first-child, .read-articles__article:last-child{
+		padding: 3rem 0;
 	}
 }
 /* Formulario de Alta */

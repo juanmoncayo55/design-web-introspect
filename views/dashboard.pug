@@ -22,6 +22,9 @@ html(lang="es")
 				ul.dashboard-navigation
 					each menuItem in menuSend
 						a.dashboard-navigation-link(href= menuItem.url)= menuItem.name
+					a.dashboard-navigation-link(href="/")
+						i.fas.fa-arrow-left
+						| Volver al Inicio
 				//ul.dashboard-navigation
 					a.dashboard-navigation-link(href="/home/dashboard")
 						i.fa-solid.fa-house-chimney

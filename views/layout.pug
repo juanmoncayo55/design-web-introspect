@@ -1,5 +1,6 @@
 doctype html
 html(lang="es")
+	block vars
 	head
 		meta(charset='UTF-8')
 		meta(name='viewport' content='width=device-width, initial-scale=1.0')
@@ -14,24 +15,35 @@ html(lang="es")
 		link(rel='stylesheet' href='/css/styles.css')
 		script(src="/js/moment.min.js")
 	body
-		.top-header__options
-			.contenedor.top-header__contenedor
-				p.text-location
-					i.fas.fa-map-marker-alt
-					| Popayan, Cauca - Colombia
-				.social-network--login
-					.social-network
-						a(href='#')
-							i.fab.fa-twitter
-						a(href='#')
-							i.fab.fa-facebook-f
-						a(href='#')
-							i.fab.fa-instagram
-						a(href='#')
-							i.fab.fa-youtube
-					.social--login
-						a.login(href='/login') Login
-						a.login(href='/signup') Signup
+		if(loggued)
+			.top-header__options
+				.contenedor.top-header__contenedor
+					a.text-location(href="/home/logout")
+						i.fas.fa-sign-out-alt
+						| Cerrar sesión
+					.social-network--login
+						.social--login
+							a.login(href='/home/dashboard') Dashboard
+							a.login(href="/home/profile") Mi Perfil
+		else
+			.top-header__options
+				.contenedor.top-header__contenedor
+					p.text-location
+						i.fas.fa-map-marker-alt
+						| Popayan, Cauca - Colombia
+					.social-network--login
+						.social-network
+							a(href='#')
+								i.fab.fa-twitter
+							a(href='#')
+								i.fab.fa-facebook-f
+							a(href='#')
+								i.fab.fa-instagram
+							a(href='#')
+								i.fab.fa-youtube
+						.social--login
+							a.login(href='/login') Login
+							a.login(href='/signup') Signup
 		header.header
 			.contenedor.header-contenedor
 				.logo
