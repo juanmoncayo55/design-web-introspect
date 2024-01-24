@@ -1,3 +1,38 @@
 extends dashboard.pug
 
 block content
+    section.dashboard-users__show.dashboard-admin_email
+        nav.breadcrumb-nav
+            ol.breadcrumb
+                li.breadcrumb-item
+                    a(href="/home/dashboard") Home
+                li.breadcrumb-item
+                    a(href="/home/admin-site") Editar Sitio
+                li.breadcrumb-item.active(aria-current="page") Administrar correos
+        div.dashboard-profile__user-header.dashboard-admin_email-header
+            p.dashboard-profile__user-heading.dashboard-admin_email-heading.table-title-heading Administrando correos
+            a.dashboard-profile__user-link.dashboard-admin_email-link.table-header-button(href="#", id="openPopupAddUser")
+                i.fa-solid.fa-user-plus
+                | Agregar un usuario
+        if(emails.length)
+            table.table.table-emails
+                thead
+                    tr
+                        th FullName
+                        th Subject
+                        th Fecha
+                tbody
+                    each email in emails
+                        tr(onclick="openEmail(event)")
+                            td(data-label="FullName") #{email.fullname.substr(0,15)}...
+                            td(data-label="Subject") #{email.subject.substr(0,70)}...
+                            td(data-label="Fecha") #{email.created_at}
+        else
+            div.error-no-show
+                p No hay una lista de usuarios que mostrar.
+
+        script.
+            function openEmail(e){
+                e.preventDefault();
+                console.log("Haz dado click");
+            }

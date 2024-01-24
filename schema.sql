@@ -66,7 +66,8 @@ FOREIGN KEY (post_id) REFERENCES post(id);
 
 
 
-
+/*Establecer un valor por defecto de una columna*/
+ALTER TABLE email_message ALTER COLUMN id_admin SET DEFAULT 0;
 /*Comando para traer los usuarios desde el administrador de usuarios*/
 SELECT id, first_name, last_name, user_name, rol, validate FROM users WHERE rol != 0 ORDER BY id DESC;
 /*Comando para editar los permisos de los usuarios*/

@@ -13,6 +13,7 @@ const express = require('express'),
 	myConnection = require('express-myconnection'),
 	fileUpload = require('express-fileupload'),
 	webp = require('webp-converter'),
+	moment = require('moment'),
 	dbOptions = {
 		host: "localhost",
 		user: "root",
@@ -315,8 +316,26 @@ app.post('/validate-post-public', (req, res, next) => {
 	}
 });
 app.get('/home/admin-site/administrator-email', (req, res, next) => {
+	/*if(req.session.user && req.session.user[0].rol == 0){
+		req.getConnection((err, conn) => {
+			conn.query("SELECT * from email_message", (err, data) => {
+				if(!err){
+					res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0], menuSend: menuSend, emails: data});
+				}else res.status(500).json({message: "Hubo un error en la consulta a la BD", error: err});
+			});
+		});
+	}else res.redirect('/login')*/
 	if(req.session.user && req.session.user[0].rol == 0){
-		res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0], menuSend: menuSend});
+		req.getConnection((err, conn) => {
+			conn.query("SELECT * from email_message", (err, data) => {
+				if(!err){
+					let newData = data.map((value, index, array) => {
+						return {...value, created_at: moment(value.created_at).locale('es').format("DD/MM/YY")}
+					});
+					res.render('administratorEmails', {title: "Administrando Correos electronicos", userLogued: req.session.user[0], menuSend: menuSend, emails: newData});
+				}else res.status(500).json({message: "Hubo un error en la consulta a la BD", error: err});
+			});
+		});
 	}else res.redirect('/login')
 });
 /****************--- DIRECCIONES PARA Users (DASHBOARD) ---****************/
@@ -839,6 +858,24 @@ app.post('/sum-liked-comment', (req, res, next) => {
 	}else res.status(403).json({message: "403 No has iniciado sesión"});
 });
 // End- Comments Of Blog
+
+// Send email to DB
+app.post('/send-email-admin', (req, res, next) => {
+	req.getConnection((err, conn) => {
+		let message = {
+			fullname: req.body.fullname,
+			email: req.body.email_contacto,
+			subject: req.body.title_message,
+			message: req.body.message_contacto
+		}
+		conn.query("INSERT INTO email_message SET ?", message, (err, data) => {
+			if(!err){
+				res.status(201).json({message: "Se ha enviado tu correo"});
+			}else res.status(500).json({message: "Hubo un error en la consulta a la BD", error: err});
+		});
+	});
+});
+// End - Send email to DB
 
 // Logout
 app.get('/home/logout', (req, res, next) => {

@@ -3,7 +3,7 @@ extends layout.pug
 block content
     section.contenedor-contacto
         div.contenedor.contenido-contacto
-            form.contacto-formulario
+            form#formContact.contacto-formulario
                 p.contacto-formulario__title Contáctenos
                 div.contacto-formulario_div
                     label(for="fullname") Fullname
@@ -34,3 +34,24 @@ block content
                 div.contacto-details-item
                     i.fas.fa-globe-americas
                     p.contact-details-item__text Website <a href="http://yoursite.com" target="_blank">yoursite.com</a>
+        script.
+            const formContact = document.querySelector("#formContact");
+
+            formContact.addEventListener("submit", function(e){
+                e.preventDefault();
+                const formData = new FormData(formContact);
+                document.querySelector(".contacto-formulario_div--submit").insertAdjacentHTML('beforeend', "<p class='message-of-comment message-of-contact'>Se envio el correo</p>");
+                fetch('send-email-admin', {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        formContact.reset();
+                        setTimeout(function(){
+                            document.querySelector('.message-of-comment.message-of-contact').remove();
+                        }, 3000);
+                        console.log(data);
+                    })
+                    .then(err => console.log(err));
+            });
