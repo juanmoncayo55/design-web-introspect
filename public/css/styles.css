@@ -2192,3 +2192,32 @@ section.edit-somos-section a img {display: block;transition: .5s all ease-in-out
 .table-emails tbody tr td:first-child {
     padding-left: 1rem;
 }
+.data-of-email{margin-bottom: 3rem;}
+.data-of-email p{line-height: normal;}
+.data-of-email .fullname{
+	font-weight: bolder;
+    font-size: 2rem;
+}
+.data-of-email .email{font-style: italic;}
+.data-of-email .created{text-align: right;}
+.data-of-email .subject{
+	font-size: 1.7rem;
+    font-weight: bold;
+    margin: 2rem 0;
+}
+.mark-read{
+	position: absolute;
+    bottom: 0;
+    right: 0;
+	margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+.mark-read label{
+	display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+.mark-read input{
+	width: 2rem;
+	height: 2rem;
+}

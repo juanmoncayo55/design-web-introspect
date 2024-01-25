@@ -327,7 +327,7 @@ app.get('/home/admin-site/administrator-email', (req, res, next) => {
 	}else res.redirect('/login')*/
 	if(req.session.user && req.session.user[0].rol == 0){
 		req.getConnection((err, conn) => {
-			conn.query("SELECT * from email_message", (err, data) => {
+			conn.query("SELECT * from email_message WHERE reading = 0 ORDER BY id DESC", (err, data) => {
 				if(!err){
 					let newData = data.map((value, index, array) => {
 						return {...value, created_at: moment(value.created_at).locale('es').format("DD/MM/YY")}
@@ -876,6 +876,24 @@ app.post('/send-email-admin', (req, res, next) => {
 	});
 });
 // End - Send email to DB
+// Change Value reading Email
+app.post('/update-change-reading-email', (req, res, next) => {
+	//console.log(req.body)
+	req.getConnection((err, conn) => {
+		let cmt = {
+			id: req.body.idComment,
+			check: req.body.check
+		};
+		conn.query("UPDATE email_message SET reading = ? WHERE id = ?", [cmt.check, cmt.id], (err, data) => {
+			if(!err){
+				res.status(200).json({message: "Se registro el correo como leido."});
+			}else{
+				res.status(500).json({message: "No se registro como leido el mensaje, hubo un error.", error});
+			}
+		});
+	});
+});
+// End - Change Value reading Email
 
 // Logout
 app.get('/home/logout', (req, res, next) => {
