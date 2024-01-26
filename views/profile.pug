@@ -43,7 +43,7 @@ block content
 						label.fline-height(for="pais") Pais
 						select.fline-height(name="pais_slc", id="pais", required)
 							if user.country != null
-								option(selected)= user.name_country
+								option(selected, value= user.country)= user.name_country
 							else
 								option(selected) ----Seleccionar País----
 							each pais in paises

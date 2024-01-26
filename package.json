@@ -1,11 +1,11 @@
 {
   "name": "introspect-admin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Agregaremos programación Javascript del lado del servidor.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "supervisor app.js"
+    "start": "supervisor server.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "express-session": "^1.17.3",
     "jsonfile": "^6.1.0",
     "moment": "^2.30.1",
+    "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "pug": "^3.0.2",
     "req-flash": "^0.0.3",
