@@ -1,6 +1,6 @@
 'use strict';
-const EmailsController = require('../models/emails-model'),
-    em = new EmailsController();
+const EmailsModel = require('../models/emails-model'),
+    em = new EmailsModel();
 
 class EmailsController {
     sendEmailAdmin(req, res, next){

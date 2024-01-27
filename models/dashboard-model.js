@@ -21,4 +21,4 @@ class DashboardModel {
         conn.query("SELECT id AS id_country, name_country FROM countrys ORDER BY name_country ASC", cb);
     }
 }
-module.expots = DashboardModel;
+module.exports = DashboardModel;

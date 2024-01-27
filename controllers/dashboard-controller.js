@@ -152,4 +152,4 @@ class DashboardController {
         }
     }
 }
-module.expots = DashboardController;
+module.exports = DashboardController;

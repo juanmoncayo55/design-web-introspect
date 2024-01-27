@@ -51,7 +51,8 @@ app
 	.use(usersRoutes)
 	.use(postsRoutes)
 	.use(dashboardRoutes)
-	.use(commentsRoutes);
+	.use(commentsRoutes)
+	.use(emailsRoutes);
 
 mailer.extend(app, {
   form: 'juanmoriones012@gmail.com',
