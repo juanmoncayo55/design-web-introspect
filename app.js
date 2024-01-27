@@ -13,6 +13,7 @@ const express = require('express'),
 	usersRoutes = require('./routes/users-routes'),
 	postsRoutes = require('./routes/posts-routes'),
 	dashboardRoutes = require('./routes/dashboard-routes'),
+	commentsRoutes = require('./routes/comments-routes'),
 	favicon = require('serve-favicon')(`${__dirname}/public/favicon.png`),
 	publicDir = express.static(`${__dirname}/public`),
 	viewDir = `${__dirname}/views`,
@@ -48,7 +49,8 @@ app
 	.use(routes)
 	.use(usersRoutes)
 	.use(postsRoutes)
-	.use(dashboardRoutes);
+	.use(dashboardRoutes)
+	.use(commentsRoutes);
 
 mailer.extend(app, {
   form: 'juanmoriones012@gmail.com',
