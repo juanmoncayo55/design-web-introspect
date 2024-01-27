@@ -11,6 +11,7 @@ const express = require('express'),
 	restFul = require('express-method-override')('_method'),
 	routes = require('./routes/index'),
 	usersRoutes = require('./routes/users-routes'),
+	postsRoutes = require('./routes/posts-routes'),
 	favicon = require('serve-favicon')(`${__dirname}/public/favicon.png`),
 	publicDir = express.static(`${__dirname}/public`),
 	viewDir = `${__dirname}/views`,
@@ -44,7 +45,8 @@ app
 		cookie: {maxAge: 30 * 60 * 1000}
 	}))
 	.use(routes)
-	.use(usersRoutes);
+	.use(usersRoutes)
+	.use(postsRoutes);
 
 mailer.extend(app, {
   form: 'juanmoriones012@gmail.com',
