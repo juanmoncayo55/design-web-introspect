@@ -8,7 +8,9 @@ const express = require('express'),
 	mailer = require('express-mailer'),
 	cors = require('cors'),
 	morgan = require('morgan'),
+	restFul = require('express-method-override')('_method'),
 	routes = require('./routes/index'),
+	usersRoutes = require('./routes/users-routes'),
 	favicon = require('serve-favicon')(`${__dirname}/public/favicon.png`),
 	publicDir = express.static(`${__dirname}/public`),
 	viewDir = `${__dirname}/views`,
@@ -27,6 +29,7 @@ app
 	.use(publicDir)
 	.use(favicon)
 	.use(morgan('dev'))
+	.use( restFul )
 	.use(fileUpload({
 		useTempFiles: true,
 		tempFileDir: 'public/images/dashboard/tmp/',
@@ -40,7 +43,8 @@ app
 		saveUninitialized: true,
 		cookie: {maxAge: 30 * 60 * 1000}
 	}))
-	.use(routes);
+	.use(routes)
+	.use(usersRoutes);
 
 mailer.extend(app, {
   form: 'juanmoriones012@gmail.com',

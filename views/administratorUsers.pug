@@ -42,6 +42,7 @@ block content
         div.popUp-user
             form#formChangeUser.formulario-changeForUser(method="POST", action="#", encType="application/x-www-form-urlencoded")
                 input(type="hidden", name="id_user", id="id_user")
+                input(type="hidden", name="_method", value="PUT")
                 fieldset
                     legend Asignando cambios al usuario
                     div.formulario-changeForUser-select

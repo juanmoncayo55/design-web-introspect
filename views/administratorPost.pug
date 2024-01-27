@@ -34,6 +34,7 @@ block content
         div#modalEditValidation.overlay.closeWindowUser
             div.popUp-user
                 form#formChangeValidation.formulario-changeForUser.formulario-changeForValPost(method="POST", action="#", encType="application/x-www-form-urlencoded")
+                    input(type="hidden", name="_method", value="PUT")
                     input(type="hidden", name="id_post", id="id_post")
                     fieldset
                         legend Validando publicación de usuario

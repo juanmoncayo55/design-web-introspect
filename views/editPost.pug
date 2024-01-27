@@ -4,6 +4,7 @@ block content
     h4.read-articles__title.addPost-title Agregar una nueva Publicación
     form.formulario.signup-formulario.formulario-addPost(method="POST", id="form-edit-post", encType="multipart/form-data")
         input(type="hidden", name="idPost", id="id_post", value=post.id)
+        input(type="hidden", name="_method", value="PUT")
         .campo
             input.campo__input(type='text', name="title_txt", placeholder="Título del Post", id="title", autocomplete='off', value=post.title required)
         .campo
