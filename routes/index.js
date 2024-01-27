@@ -120,5 +120,13 @@ router
             });
         });
     })
+    .get('/home/logout', (req, res, next) => {
+        req.session.destroy(function(err) {
+            if(!err){
+                console.log(req.session);
+                res.redirect("/login");
+            }else console.log("Error destroy: ", err)
+        })
+    })
     .use(error404);
 module.exports = router;
