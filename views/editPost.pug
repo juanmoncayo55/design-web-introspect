@@ -2,7 +2,7 @@ extends dashboard.pug
 
 block content
     h4.read-articles__title.addPost-title Agregar una nueva Publicación
-    form.formulario.signup-formulario.formulario-addPost(method="POST", id="form-edit-post", encType="multipart/form-data")
+    form.formulario.signup-formulario.formulario-addPost(method="PUT", id="form-edit-post", encType="multipart/form-data")
         input(type="hidden", name="idPost", id="id_post", value=post.id)
         input(type="hidden", name="_method", value="PUT")
         .campo
@@ -51,11 +51,12 @@ block content
             e.preventDefault();
             const formData = new FormData(formEditPost);
             fetch('/edit-post', {
-                method: "POST",
+                method: "PUT",
                 body: formData
             })
             .then(response => response.json())
             .then(success => {
                 console.log(success)
             })
+            .catch(err => console.log(err));
         });

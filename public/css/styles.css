@@ -1729,8 +1729,8 @@ form.postOfBlog-right__search-form input[type=submit]:hover{
     border-radius: 0.6rem;
 	transition: .1s all ease-in-out;
 }
-.blog-posts-post a:hover{opacity: .7;}
-.blog-posts-post a:active{opacity: 1;}
+.blog-posts-post a:hover, .blog-posts-post__delete:hover{opacity: .7;}
+.blog-posts-post a:active, .blog-posts-post__delete:active{opacity: 1;}
 .blog-posts-post__title, .post-read__title{
 	color: var(--primario);
     font-size: 2.2rem;
@@ -1753,7 +1753,16 @@ form.postOfBlog-right__search-form input[type=submit]:hover{
 .blog-posts-post__tag i{margin-right: .8rem;}
 .blog-posts-post__see{background-color: #03A9F4;}
 .blog-posts-post__edit{background-color: #4CAF50;margin: 0 1rem;}
-.blog-posts-post__delete{background-color: #ed2929;}
+.blog-posts-post__delete{
+background-color: #ed2929;
+border: 0;
+color: white;
+padding: 0.4rem 1rem;
+font-size: 1.8rem;
+border-radius: 0.6rem;
+transition: .1s all ease-in-out;
+cursor: pointer;
+}
 .table-posts thead th{padding: 1.3rem 1rem;}
 .th-text-center{text-align: center;}
 .th-bold-post{font-weight: bold;}

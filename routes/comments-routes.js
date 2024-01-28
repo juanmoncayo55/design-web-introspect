@@ -7,6 +7,6 @@ const CommentsController = require('../controllers/comments-controller'),
 router
     .get("/getAllComments/:idPost", cc.getAllComments)
     .post('/add-comment-of-blog', cc.addCommentOfBlog)
-    .post('/sum-liked-comment', cc.sumLikedComment);
+    .put('/sum-liked-comment', cc.sumLikedComment);
 
 module.exports = router;

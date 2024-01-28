@@ -6,6 +6,6 @@ const EmailsController = require('../controllers/emails-controller'),
 
 router
     .post('/send-email-admin', ec.sendEmailAdmin)
-    .post('/update-change-reading-email', ec.updateChangeReadingEmail);
+    .put('/update-change-reading-email', ec.updateChangeReadingEmail);
 
 module.exports = router;

@@ -28,8 +28,8 @@ class UsersController {
                 return res.status(400).json({message: "Ningun archivo fue cargado."});
             }
             photoPerfil = req.files.image_user_file
-            um.addUser((err, data) => {
-                if(err) res.status(500).json({error: "No se inserto el usuario"});
+            um.addUser(user, (err, data) => {
+                if(err) res.status(500).json({error: "No se inserto el usuario", error: err});
                 else{
                     name_photo = `${data.insertId}.webp`;
                     const convertImageToWebp = webp.cwebp(photoPerfil.tempFilePath, `/../public/images/dashboard/${name_photo}`,"-q 70 -lossless");
@@ -44,9 +44,10 @@ class UsersController {
                                 name_photo: name_photo,
                                 id: data.insertId
                             }
+                            console.log(dataImage);
                             um.updateImage(dataImage, (err, data) => {
                                 if(err)
-                                    res.status(502).json({error: "Error en la Base de Datos"});
+                                    res.status(502).json({error: "Error en la Base de Datos", err});
                                 else{
                                     res.status(200).json({success: "Archivo subido con exito :D, y registro de usuario correcto", namePhoto: name_photo});
                                 }
@@ -121,7 +122,7 @@ class UsersController {
         um.editProfileUser(dataUser, (err, data) => {
             if(!err){
                 console.log(data);
-                if(idUser == req.session.userId){
+                if(dataUser.idUser == req.session.userId){
                     req.session.user[0].first_name = user.first_name;
                     req.session.user[0].last_name = user.last_name;
                     req.session.user[0].user_name = user.user_name;

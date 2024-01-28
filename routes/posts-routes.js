@@ -5,11 +5,11 @@ const PostsController = require('../controllers/posts-controller'),
     pc = new PostsController();
 
 router
-    .post('/new-post', pc.newPost)
+    .get('/home/adminBlog', pc.adminBlog)
     .get('/home/edit-post/:id', pc.getOnePost)
-    .post('/edit-post', pc.editPost)
-    .get('/home/delete-post/:id', pc.deletePost)
-    .post('/validate-post-public', pc.validatePostPublic)
-    .get('/home/adminBlog', pc.adminBlog);
+    .delete('/home/delete-post/:id', pc.deletePost)
+    .post('/new-post', pc.newPost)
+    .put('/edit-post', pc.editPost)
+    .put('/validate-post-public', pc.validatePostPublic);
 
 module.exports = router;

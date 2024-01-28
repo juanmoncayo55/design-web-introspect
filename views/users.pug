@@ -34,8 +34,10 @@ block content
                                 a.table-action(href=`/home/edit-user/${user.id}`, title="Editar")
                                     i.fa-regular.fa-pen-to-square
                             td.centrar-text.table-data-action
-                                a.table-action.delete(href=`/home/delete-user/${user.id}`, title="Eliminar")
-                                    i.fa-regular.fa-trash-can
+                                form(method="DELETE", action=`/home/delete-user/${user.id}`, style="display: inline-block;")
+                                    input(type="hidden", name="_method", value="DELETE")
+                                    button.blog-posts-post__delete
+                                        i.fa-regular.fa-trash-can
         else
             div.error-no-show
                 p No hay una lista de usuarios que mostrar.

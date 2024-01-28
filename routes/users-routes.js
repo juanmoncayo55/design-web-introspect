@@ -5,12 +5,12 @@ const UsersController = require('../controllers/users-controller'),
     uc = new UsersController();
 
 router
-    .post('/user-add', uc.addUser)
     .get('/home/users', uc.getAllUsers)
     .get('/home/edit-user/:id', uc.getOneUserForEdit)
-    .post('/edit-profile-user', uc.editProfileUser)
-    .post('/update-permissions-user', uc.updatePermissionUser)
-    .get('/home/delete-user/:id', uc.deleteUser)
-    .post('/upload-image', uc.uploadImages);
+    .delete('/home/delete-user/:id', uc.deleteUser)
+    .post('/user-add', uc.addUser)
+    .put('/edit-profile-user', uc.editProfileUser)
+    .put('/update-permissions-user', uc.updatePermissionUser)
+    .put('/upload-image', uc.uploadImages);
 
 module.exports = router;

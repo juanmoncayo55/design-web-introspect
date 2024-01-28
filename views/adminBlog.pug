@@ -43,8 +43,10 @@ block content
                                 i.far.fa-eye
                             a.blog-posts-post__edit(href=`/home/edit-post/${post.id}`)
                                 i.far.fa-edit
-                            a.blog-posts-post__delete(href=`/home/delete-post/${post.id}`)
-                                i.fas.fa-trash
+                            form(method="DELETE", action=`/home/delete-post/${post.id}`, style="display: inline-block;")
+                                input(type="hidden", name="_method", value="DELETE")
+                                button.blog-posts-post__delete()
+                                    i.fas.fa-trash
         else
             div.not-posts No hay Publicaciones que mostrar
 

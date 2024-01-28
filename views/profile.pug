@@ -22,9 +22,9 @@ block content
 					| Cerrar sesión
 			div.dashboard-profile__user-content-block2
 				div.spinner-content
-				form.formulario-dashboard-userProfile(action="/edit-profile-user", method="POST", id="formulario-userProfile")
-					input(type="hidden", name="_method", value="PUT")
+				form.formulario-dashboard-userProfile(action="/edit-profile-user", id="formulario-userProfile", method="POST")
 					input(type="hidden", name="id_profile", value= user.id)
+					input(type="hidden", name="_method", value="PUT")
 					div
 						label.fline-height(for="fn") Primer Nombre
 						input.fline-height.campo__input(type="text", value= user.first_name, name="firstName_txt", id="fn", readonly, required)
