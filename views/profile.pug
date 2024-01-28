@@ -13,6 +13,7 @@ block content
 						i.fa-solid.fa-camera
 						p.link-change-photo-text Cambiar foto<br>del perfil
 					form(action="#" ,method="POST", encType="multipart/form-data", id="formInputPhoto")
+						input(type="hidden", name="_method", value="PUT")
 						input(type="file", name="photo_perfil", id="input-photo-perfil", style="display: none;", accept="image/jpeg,image/jpg,image/png")
 						input(type="button", style="display: none;")
 				p.fline-height.dashboard-profile__user-content-fullname #{user.first_name} #{user.last_name}

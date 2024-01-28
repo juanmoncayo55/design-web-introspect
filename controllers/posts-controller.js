@@ -91,9 +91,9 @@ class PostsController {
                 //name_photo = `${req.body.name_image_post.replace(/\.[^/.]+$/, "")}`;
                 name_photo = `${req.body.name_image_post}`;
 
-                const convertImageToWebp = webp.cwebp(photoPost.tempFilePath, `/public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
+                const convertImageToWebp = webp.cwebp(photoPost.tempFilePath, `/../public/images/dashboard/post/${name_photo}`,"-q 70 -lossless");
 
-                uploadPath = __dirname + '/public/images/dashboard/post/' + name_photo;
+                uploadPath = __dirname + '/../public/images/dashboard/post/' + name_photo;
 
                 photoPost.mv(uploadPath, (errorImage) => {
                     if (!errorImage){

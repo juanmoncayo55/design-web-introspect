@@ -123,9 +123,9 @@ class UsersController {
             if(!err){
                 console.log(data);
                 if(dataUser.idUser == req.session.userId){
-                    req.session.user[0].first_name = user.first_name;
-                    req.session.user[0].last_name = user.last_name;
-                    req.session.user[0].user_name = user.user_name;
+                    req.session.user[0].first_name = dataUser.user.first_name;
+                    req.session.user[0].last_name = dataUser.user.last_name;
+                    req.session.user[0].user_name = dataUser.user.user_name;
                 }
                 res.redirect('/home/dashboard');
             }else{
@@ -205,7 +205,7 @@ class UsersController {
                 };
                 um.uploadImages(dataUploadImages, (err, data) => {
                     if(err)
-                        res.status(502).json({error: "Error en la Base de Datos"});
+                        res.status(502).json({error: "Error en la Base de Datos", err});
                     else{
                         res.status(200).json({success: "Archivo subido con exito :D", namePhoto: name_photo});
                     }

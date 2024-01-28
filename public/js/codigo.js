@@ -20,7 +20,7 @@ openFile.addEventListener("click", function(e){
             data.append('id_user', d.querySelector('input[name="id_profile"]').value)
             spinnerContent.innerHTML = `<div class="fa-3x"><i class=" fas fa-spinner fa-pulse"></i></div>`;
             fetch('/upload-image', {
-                method: 'POST',
+                method: 'PUT',
                 body: data
             })
                 .then(response => response.json())
