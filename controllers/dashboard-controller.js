@@ -112,19 +112,20 @@ class DashboardController {
             //Creando una variable para insertar los paises en forma de objetos
             let paises;
             //Trayendo los paises de la base de datos
-            dm.getAllCountries((err, data) => {
-                    if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
-                    else paises = data;
-            });
-            dm.profile(req.session.userId, (err, data) => {
-                console.log(data)
-                res.render('profile', {
-                    title: "Información del usuario",
-                    user: data[0],
-                    userLogued: req.session.user[0],
-                    paises: paises,
-                    menuSend: global.menuSend
-                });
+            dm.getAllCountries((err, paises) => {
+                if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
+                else{
+                    dm.profile(req.session.userId, (err, data) => {
+                        console.log(data)
+                        res.render('profile', {
+                            title: "Información del usuario",
+                            user: data[0],
+                            userLogued: req.session.user[0],
+                            paises: paises,
+                            menuSend: global.menuSend
+                        });
+                    });
+                }
             });
         }else res.redirect('/login');
     }

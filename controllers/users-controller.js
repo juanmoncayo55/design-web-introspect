@@ -36,8 +36,16 @@ class UsersController {
                     uploadPath = __dirname + '/../public/images/dashboard/' + name_photo;
 
                     photoPerfil.mv(uploadPath, (err) => {
-                        if (err)
-                              return res.status(500).json(err);
+                        if (err){
+                            fs.unlink(`${__dirname}/../public/images/dashboard/${name_photo}`, function(err){
+                                if (err) {
+                                    console.error(err);
+                                  } else {
+                                    console.log('File is deleted.');
+                                  }
+                            });
+                            res.status(500).json(err);
+                        }
                         else{
                             let id_profile = data.insertId;
                             let dataImage = {
@@ -61,23 +69,22 @@ class UsersController {
     } // Fin metodo addUser
     getAllUsers(req, res, next){
         if(req.session.user && req.session.user[0].rol == 0){
-            let paises;
             let idUser = req.session.userId;
-            um.getAllCountrys((err, data) => {
-                    if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
-                    else paises = data;
-            });
-            um.getAllUsers(idUser, (err, data) =>{
-                if(!err){
-                    console.log(data);
-                    res.render('users', {
-                        title: "Usuarios de Introspect",
-                        userLogued: req.session.user[0],
-                        users: data,
-                        paises,
-                        menuSend: global.menuSend
-                    });
-                }else console.log("Error: ", err);
+            um.getAllCountrys((err, paises) => {
+                    if(err) res.send(400).json({error: "Hubo un error en la consulta SQL", error: err})
+                    else{
+                        um.getAllUsers(idUser, (err, data) =>{
+                            if(!err){
+                                res.render('users', {
+                                    title: "Usuarios de Introspect",
+                                    userLogued: req.session.user[0],
+                                    users: data,
+                                    paises,
+                                    menuSend: global.menuSend
+                                });
+                            }else console.log("Error: ", err);
+                        });
+                    }
             });
         }else{
             res.redirect('/login');
@@ -89,18 +96,19 @@ class UsersController {
             let paises;
             let id = req.params.id;
             //Trayendo los paises de la base de datos
-            um.getAllCountrys((err, data) => {
-                if(err) res.send(400).json({error: "Hubo un error en la consulta SQL"})
-                else paises = data;
-            });
-            um.getOneUserForEdit(id, (err, data) => {
-                res.render('profile', {
-                    title: "Información del usuario",
-                    user: data[0],
-                    userLogued: req.session.user[0],
-                    paises: paises,
-                    menuSend: global.menuSend
-                });
+            um.getAllCountrys((err, paises) => {
+                if(err) res.send(400).json({error: "Hubo un error en la consulta SQL", error: err})
+                else{
+                    um.getOneUserForEdit(id, (err, data) => {
+                        res.render('profile', {
+                            title: "Información del usuario",
+                            user: data[0],
+                            userLogued: req.session.user[0],
+                            paises: paises,
+                            menuSend: global.menuSend
+                        });
+                    });
+                }
             });
         }else{
             res.redirect('/login');
@@ -143,6 +151,7 @@ class UsersController {
             };
             um.updatePermissionUser(u, (err, data) => {
                 if(!err){
+                    console.log(data);
                     res.status(200).json({message: "Los permisos fueron cambiados correctamente."});
                 }else res.status(502).json({error: "No se pudo actualizar los Datos."});
             });
@@ -160,14 +169,14 @@ class UsersController {
                         if (err) {
                             console.error(err);
                           } else {
+                            um.deleteUser(idUser, (err, data) => {
+                                if(err)
+                                    return next( new Error('Registro no Encontrado') );
+                                else
+                                    res.redirect('/home/users')
+                            });
                             console.log('File is deleted.');
                           }
-                    });
-                    um.deleteUser(idUser, (err, data) => {
-                        if(err)
-                            return next( new Error('Registro no Encontrado') );
-                        else
-                            res.redirect('/home/users')
                     });
 
                 }else console.log(err)
@@ -193,8 +202,16 @@ class UsersController {
 
         //Movemos el archivo a la carpeta del servidor
         photoPerfil.mv(uploadPath, (err) => {
-            if (err)
-                return res.status(500).json(err);
+            if (err){
+                fs.unlink(`${__dirname}/../public/images/dashboard/${name_photo}`, function(err){
+                    if (err) {
+                        console.error(err);
+                      } else {
+                        console.log('File is deleted.');
+                      }
+                });
+                res.status(500).json(err);
+            }
             else{
                 //console.log("Url del archivo: ", uploadPath);
                 //console.log("photoPerfil: ", photoPerfil.name);

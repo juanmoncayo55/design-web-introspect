@@ -20,9 +20,16 @@ class PostsController {
             uploadPath = __dirname + '/../public/images/dashboard/post/' + name_photo;
 
             photoPost.mv(uploadPath, (err) => {
-                if (err)
-                      return res.status(500).json(err);
-                else{
+                if (err){
+                    fs.unlink(`${__dirname}/../public/images/dashboard/${name_photo}`, function(err){
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            console.log('File is deleted.');
+                        }
+                    });
+                    res.status(500).json(err);
+                }else{
                     let post = {
                         title: req.body.title_txt,
                         brief: req.body.brief_txt,
@@ -46,26 +53,24 @@ class PostsController {
     getOnePost(req, res, next){
         if(req.session.user  && req.session.user[0].rol != 2){
             let idPost = req.params.id;
-            let categories;
-            pm.getAllCategories((err, data) => {
+            pm.getAllCategories((err, categories) => {
                 if(err)
                     console.log("No se pudo traer las categorias, hubo un error en la BD", err);
                 else{
-                    categories = data;
-                }
-            });
-            pm.getOnePost(idPost, (err, data) => {
-                if(err){
-                    console.log(err);
-                    res.status(500).json({error: "Hubo un error en la BD, vuelve a intentarlo mas tarde", err});
-                }
-                else{
-                    res.render('editPost', {
-                        title: "Editando Post de Blog",
-                        userLogued: req.session.user[0],
-                        post: data[0],
-                        categories,
-                        menuSend: global.menuSend
+                    pm.getOnePost(idPost, (err, data) => {
+                        if(err){
+                            console.log(err);
+                            res.status(500).json({error: "Hubo un error en la BD, vuelve a intentarlo mas tarde", err});
+                        }
+                        else{
+                            res.render('editPost', {
+                                title: "Editando Post de Blog",
+                                userLogued: req.session.user[0],
+                                post: data[0],
+                                categories,
+                                menuSend: global.menuSend
+                            });
+                        }
                     });
                 }
             });
@@ -121,15 +126,15 @@ class PostsController {
                     fs.unlink(`${__dirname}/../public/images/dashboard/post/${nameOfImage}`, function(err){
                         if (err) {
                             console.error(err);
-                          } else {
+                        } else {
                             console.log('File is deleted.');
-                          }
-                    });
-                    pm.deletePost(id, (err, data) => {
-                        if(err)
-                            return next( new Error('Registro no Encontrado') );
-                        else
-                            res.redirect('/home/adminBlog')
+                            pm.deletePost(id, (err, data) => {
+                                if(err)
+                                    return next( new Error('Registro no Encontrado') );
+                                else
+                                    res.redirect('/home/adminBlog')
+                            });
+                        }
                     });
                 }
             });
